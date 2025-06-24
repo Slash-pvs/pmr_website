@@ -8,17 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v3
 
-    - name: Deploy via SFTP
-      uses: SamKirkland/FTP-Deploy-Action@4.0.0
-      with:
-        server: ${{ secrets.SFTP_SERVER }}
-        username: ${{ secrets.SFTP_USERNAME }}
-        password: ${{ secrets.SFTP_PASSWORD }}
-        protocol: sftp
-        local-dir: ./public
-        server-dir: /www/public
+      - name: Déploiement via SFTP
+        uses: appleboy/sftp-action@master
+        with:
+          host: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 22
+          source: "./public/"
+          target: "/www/public"
