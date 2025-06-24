@@ -1,0 +1,53 @@
+/* Politique RGPD & Mentions légales */
+
+.main-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Arial', sans-serif;
+  color: #222;
+  background-color: #fff;
+  line-height: 1.6;
+}
+
+.main-content h1 {
+  font-size: 2rem;
+  margin-top: 2rem;
+  color: rgb(145, 16, 42);
+  border-bottom: 2px solid rgb(145, 16, 42);
+  padding-bottom: 0.5rem;
+}
+
+.main-content h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  color: rgb(145, 16, 42);
+}
+
+.main-content p {
+  margin: 1rem 0;
+}
+
+.main-content ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.main-content li {
+  margin-bottom: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .main-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .main-content h2 {
+    font-size: 1.25rem;
+  }
+}

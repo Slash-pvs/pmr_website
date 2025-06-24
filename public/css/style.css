@@ -1,0 +1,222 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Styles sur le HTML et Body */
+html, body {
+    overflow: visible; /* Permet au widget de gérer son propre débordement */
+    width: 100%;
+    height: 100%; /* S'assurer que le body prend toute la hauteur */
+    margin: 0;
+}
+/* Mise en page principale */
+body {
+    display: block; /* Retirer flexbox pour éviter des conflits avec le widget */
+    font-family: 'Chivo Mono', monospace; /* Police de base */
+    background-color: #f9f9f9; /* Fond clair */
+    height: 100%; /* S'assurer que le body prend toute la hauteur */
+    margin: 0; /* Supprimer les marges par défaut du body */
+}
+footer {
+    width: 100%;
+    padding: 2rem 0;
+    margin-top: auto; /* Pousse le footer en bas */
+}
+/* Conteneur principal qui contient le widget */
+.main-content {
+flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centrer verticalement */
+    align-items: center; /* Centrer horizontalement */
+    min-height: 100vh; /* Hauteur minimale égale à la hauteur de l'écran */
+    padding: 20px; /* Un peu d'espace autour du contenu */
+    text-align: center;
+    overflow: visible; /* Permet au widget de s'afficher correctement sans être coupé */
+}
+
+/* Style général du contenu */
+p {
+    text-align: center; /* Centre le texte */
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+/* Styles pour les titres */
+h1, h2 {
+    padding-bottom: 1rem;
+    text-align: center;
+}
+
+
+
+/* Style pour la navigation et le footer */
+.nav-css, .footer-css {
+    width: 100%;
+    position: relative;
+}
+
+
+#navBar {
+    width: 100%;
+    position: relative;
+    z-index: 10; /* Assure que la barre de navigation est au-dessus du fond */
+    margin-top: 5rem; /* Ajuste l'espace au-dessus de la barre de navigation, si nécessaire */
+}
+
+/* Styles pour la div navDiv */
+#navDiv {
+    width: 100%; /* Prend toute la largeur */
+    height: 10rem; /* Ajuste la hauteur comme tu veux */
+    display: flex;
+    justify-content: center; /* Aligne les éléments horizontalement */
+    align-items: center; /* Aligne les éléments verticalement */
+    z-index: 2; /* Assure que les éléments de navigation sont au-dessus du fond */
+    position: relative; /* Garantit que la position est relative par rapport à son parent */
+}
+
+/* Ajouter des marges et un padding pour assurer que le contenu ne touche pas les bords */
+#navDiv .nav_div {
+    padding: 0 20px;
+    text-align: center;
+}
+
+/* Ajouter des styles de base pour les éléments de navigation */
+.page_pmr {
+    text-decoration: none;
+    color: white;
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}
+
+.hr { 
+    border: solid 0.75rem rgb(145, 16, 42);
+}
+.gallerie {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 2 images par ligne */
+    gap: 15px;
+    margin-top: 20px;
+    justify-items: center;
+    width: 100%;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gallerie-img {
+    width: 100%; /* Prend toute la largeur disponible */
+    max-width: 350px; /* Empêche l’image d’être trop grande */
+    height: 200px; /* Hauteur fixe pour uniformité */
+    object-fit: cover; /* Remplir l'espace sans déformer */
+    background-color: white; /* Fond blanc pour les images portrait */
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Cas portrait : ajuster pour avoir un fond blanc visible */
+.gallerie-img {
+    width: 100%;
+    max-width: 100%;      /* Pour s'adapter au conteneur */
+    height: auto;         /* ← Important : retire la hauteur fixe */
+    object-fit: contain;  /* Affichage complet de l’image sans la couper */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.gallerie-img:hover {
+    transform: scale(1.05); /* Petit effet zoom au survol */
+}
+@media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+        max-width: 768px;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    p, h1, h2 {
+        font-size: 1rem; /* Ajuste la taille du texte */
+        line-height: 1.4; /* Espace entre les lignes pour plus de lisibilité */
+    }
+
+    /* Empêcher que le texte déborde en ajoutant des marges et du padding */
+    .gallerie-img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* En cas de débordement de contenu dans les éléments de texte */
+    .feed {
+        max-width: 100%; /* Limite la largeur */
+        padding: 10px;
+    }
+
+    .post {
+        font-size: 14px; /* Réduit la taille de la police pour les posts */
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 990px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    p {
+        font-size: 20px;
+    }
+
+    .competitions_ffr_widget {
+        max-width: 100%;
+    }
+
+    .gallerie {
+        grid-template-columns: 1fr; /* Une seule colonne */
+        gap: 10px; /* Un peu moins d'espace sur mobile */
+    }
+
+    .gallerie-img {
+        max-width: 100%; /* Prend toute la largeur disponible dans la colonne */
+        height: auto; /* Ajuste la hauteur automatiquement pour les petits écrans */
+    }
+}
+.success-msg {
+   color: green;
+   font-weight: bold;
+   margin-bottom: 1rem;
+}
+.error-msg {
+   color: red;
+   font-weight: bold;
+   margin-bottom: 1rem;
+}
+h2.soustitre {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem; /* espace entre les posts */
+  padding: 1rem;
+   width: 100%;
+}
+
+.post {
+  background-color: #f9f9f9; /* léger fond pour mieux voir */
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+p{
+margin-bottom: 2rem;
+}

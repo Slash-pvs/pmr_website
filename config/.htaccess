@@ -1,0 +1,15 @@
+# Interdire l'accès direct au fichier config.php
+<Files config.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Interdire l'accès à tout fichier dans le dossier config/
+# sauf ceux spécifiquement autorisés (par exemple si tu as d'autres fichiers dans ce dossier que tu veux rendre accessibles)
+<Directory "/chemin/vers/ton/dossier/config">
+    Order Deny,Allow
+    Deny from all
+</Directory>
+
+# Optionnel : empêche l'affichage du contenu du répertoire
+Options -Indexes

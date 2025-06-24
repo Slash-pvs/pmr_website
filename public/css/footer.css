@@ -1,0 +1,185 @@
+    /* Container principal du footer */
+    footer {
+        color: black;
+        background-color: #f9f9f9;
+        /* Fond clair */
+        font-family: 'Chivo Mono', monospace;
+        /* Police de base */
+        width: 100%;
+        padding: 2rem 0;
+    }
+
+    footer hr {
+        border-top: 3px solid rgb(145, 16, 42);
+        width: 100vw;
+        /* Prend toute la largeur de l'écran */
+        margin-left: calc(-50vw + 50%);
+        /* Corrige le centrage automatique */
+    }
+
+    /* Espace de séparation en haut du footer */
+    .red_espace {
+        position: relative;
+        left: 0;
+        width: 100vw;
+        /* Prend toute la largeur de l'écran */
+        margin-left: calc(-50vw + 50%);
+        /* Corrige le centrage automatique */
+        height: 5rem;
+        background-color: rgb(145, 16, 42);
+    }
+
+    /* Contenu du footer */
+    .div_footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4rem;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    /* Logo du footer */
+    .img_footer {
+        width: 10rem;
+        height: 10rem;
+        object-fit: contain;
+        border-radius: 50%;
+        border: solid 0.25rem rgb(145, 16, 42);
+        /* Bordure pour le logo */
+    }
+
+    /* Conteneur des informations générales */
+    .div_footer div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Liens dans le footer */
+    footer a {
+        color: rgb(145, 16, 42);
+        /* Couleur des liens */
+        font-weight: bold;
+        font-size: 1.25rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: #d8d8d8;
+        /* Couleur au survol des liens */
+    }
+
+.carousel-container {
+    width: 100%;
+    max-width: 62.5rem; /* équivalent à 1000px si 1rem = 16px */
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 1rem 0;
+}
+
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+    height: 6.25rem; /* 100px */
+}
+
+.slider-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12.5rem; /* 200px */
+    height: 6.25rem; /* 100px */
+    padding: 0 0.625rem; /* 10px */
+}
+
+.slide picture,
+.slide img {
+    max-height: 5rem;    /* 80px */
+    max-width: 11.25rem; /* 180px */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+
+    /* Style des boutons de navigation */
+    button.next,
+    button.prev {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    button.prev {
+        left: 10px;
+    }
+
+    button.next {
+        right: 10px;
+    }
+
+
+
+    /* Media queries pour les petits écrans */
+    @media (max-width: 768px) {
+        .div_footer {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .img_footer {
+            width: 8rem;
+            height: 8rem;
+        }
+
+        footer a {
+            font-size: 1.1rem;
+        }
+    }
+
+    .contact-row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .contact-row:last-child {
+        border-bottom: none;
+    }
+
+    .contact-label {
+        width: 150px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .contact-value {
+        flex: 1;
+        color: #555;
+    }
+
+    .contact-value a {
+        color: #0066cc;
+        color: inherit;
+        /* Hérite de la couleur de .contact-value */
+        text-decoration: none;
+    }
+
+    .contact-value a:hover {
+        text-decoration: underline;
+    }
