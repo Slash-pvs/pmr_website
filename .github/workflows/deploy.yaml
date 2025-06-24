@@ -10,8 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Récupérer le code
         uses: actions/checkout@v3
+
+      - name: Vérifier accès aux secrets
+        run: echo "Le secret SFTP_SERVER est bien présent"
+        env:
+          SFTP_SERVER: ${{ secrets.SFTP_SERVER }}
 
       - name: Déploiement via SCP
         uses: appleboy/scp-action@master
