@@ -30,6 +30,7 @@ $partenaires = getAllPartners($pdo);
     <link rel="stylesheet" href="/public/css/style.css">
     <link rel="stylesheet" href="/public/css/nav.css">
     <link rel="stylesheet" href="/public/css/footer.css">
+    <link rel="stylesheet" href="/public/css/dashboard.css">
 </head>
 
 <body>
@@ -45,8 +46,9 @@ $partenaires = getAllPartners($pdo);
             <a href="contacts_crud.php"> modifier / ajouter un contact</a>
             <a href="product_list.php"> modifier / ajouter un produit de la boutique</a>
             <a href="partenaires_crud.php"> modifier / ajouter un partenaire</a>
-             <a href="upload_img.php"> ajouter une image</a>
-             <a href="edit_image_nav.php">  modifier l'image de la Bannière du site</a>     
+            <a href="upload_img.php"> ajouter une image</a>
+            <a href="edit_image_nav.php"> modifier l'image de la Bannière du site</a>
+            <a href="list_img.php"> liste des image / supression d'une image du serveur</a>
         </div>
     </main>
     <!-- Footer -->

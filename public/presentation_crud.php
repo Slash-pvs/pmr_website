@@ -109,7 +109,7 @@ $presentations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <?php safeRequire('nav.php'); ?>
     <main class="main-content">
-        <h1><?= $id > 0 ? "Modifier une présentation" : "Créer une présentation" ?></h1>
+        <h1>Modifier une présentation</h1>
 
         <?php if (!empty($errors)): ?>
             <div class="error">
@@ -153,7 +153,7 @@ $presentations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
-
+        <h1>Créer une présentation</h1>
         <form method="POST">
             <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>" />
             <input type="hidden" name="id" value="<?= $presentation['id'] ?? '' ?>" />

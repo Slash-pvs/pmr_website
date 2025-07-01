@@ -61,9 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $email = trim($_POST['email'] ?? '');
     $edit_id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 
-    if ($lieu === '') $errors[] = "Le lieu est requis.";
-    if ($numero_tel === '') $errors[] = "Le numéro de téléphone est requis.";
-    if ($email === '') $errors[] = "L'adresse email est requise.";
+    if ($lieu === '')
+        $errors[] = "Le lieu est requis.";
+    if ($numero_tel === '')
+        $errors[] = "Le numéro de téléphone est requis.";
+    if ($email === '')
+        $errors[] = "L'adresse email est requise.";
 
     if (empty($errors)) {
         if ($edit_id > 0) {
@@ -97,6 +100,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <title><?= $id > 0 ? "Modifier un contact" : "Créer un contact" ?></title>
@@ -108,7 +112,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <?php safeRequire('nav.php'); ?>
     <main class="main-content">
-        <h1><?= $id > 0 ? "Modifier un contact" : "Créer un contact" ?></h1>
+        <h1>Modifier un contact</h1>
 
         <?php if (!empty($errors)): ?>
             <div class="error">
@@ -143,7 +147,8 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($c['email']) ?></td>
                         <td>
                             <a href="?id=<?= $c['id'] ?>">Modifier</a> |
-                            <form method="POST" style="display:inline;" onsubmit="return confirm('Supprimer ce contact ?');">
+                            <form method="POST" style="display:inline;"
+                                onsubmit="return confirm('Supprimer ce contact ?');">
                                 <input type="hidden" name="delete_id" value="<?= $c['id'] ?>" />
                                 <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>" />
                                 <button type="submit" class="delete-btn">Supprimer</button>
@@ -153,21 +158,24 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
-
+        <h1> Créer un contact</h1>
         <form method="POST">
             <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>" />
             <input type="hidden" name="id" value="<?= $contactData['id'] ?? '' ?>" />
             <div>
                 <label for="lieu">Lieu :</label><br>
-                <input type="text" id="lieu" name="lieu" required value="<?= htmlspecialchars($contactData['lieu'] ?? '') ?>" />
+                <input type="text" id="lieu" name="lieu" required
+                    value="<?= htmlspecialchars($contactData['lieu'] ?? '') ?>" />
             </div>
             <div>
                 <label for="numero_tel">Numéro de téléphone :</label><br>
-                <input type="text" id="numero_tel" name="numero_tel" required value="<?= htmlspecialchars($contactData['numero_tel'] ?? '') ?>" />
+                <input type="text" id="numero_tel" name="numero_tel" required
+                    value="<?= htmlspecialchars($contactData['numero_tel'] ?? '') ?>" />
             </div>
             <div>
                 <label for="email">Email :</label><br>
-                <input type="email" id="email" name="email" required value="<?= htmlspecialchars($contactData['email'] ?? '') ?>" />
+                <input type="email" id="email" name="email" required
+                    value="<?= htmlspecialchars($contactData['email'] ?? '') ?>" />
             </div>
             <div style="margin-top: 10px;">
                 <button type="submit" name="submit"><?= $id > 0 ? "Modifier" : "Créer" ?></button>
@@ -186,4 +194,5 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
 </body>
+
 </html>
