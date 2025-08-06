@@ -30,8 +30,8 @@ $partenaires = getAllPartners($pdo);
     <link rel="stylesheet" href="/public/css/style.css">
     <link rel="stylesheet" href="/public/css/nav.css">
     <link rel="stylesheet" href="/public/css/footer.css">
-    <link rel="stylesheet" href="/public/css/articles.css">
-    <title>Actu</title>
+    <title>Ecole de rugby</title>
+    <meta name="robots" content="noindex, nofollow"> <!-- empeche l'indexation du site web -->
 </head>
 
 <body>

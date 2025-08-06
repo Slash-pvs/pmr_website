@@ -1,92 +1,262 @@
-        h1 {
-            text-align: center;
-            color: rgb(145, 16, 42);
-        }
+/*box du panier */
+.box_panier {
+    width: 100%;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2rem;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+/* Conteneur pour activer le scroll horizontal si besoin */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
 
-        th,
-        td {
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 1px solid #ccc;
-        }
+/* Table responsive */
+table {
+    font-size: 0.8rem;
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+}
 
-        th {
-            background-color: rgb(145, 16, 42);
-            color: white;
-        }
+/* Cellules */
+th,
+td {
+    padding: 0.8rem;
+    text-align: center;
+    border-bottom: 0.1rem solid #ccc;
+    white-space: normal;
+    word-wrap: break-word;
+}
 
-        tfoot td {
-            font-weight: bold;
-        }
+/* Largeurs colonnes - on évite de fixer trop précisément */
+th:nth-child(1),
+td:nth-child(1) {
+    text-align: left;
+}
 
-        .empty {
-            text-align: center;
-            font-size: 1.2rem;
-            margin-top: 2rem;
-        }
+/* En-têtes */
+th {
+    background-color: rgb(145, 16, 42);
+    color: white;
+}
 
-        form {
-            margin-top: 2rem;
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            max-width: 600px;
-            margin-inline: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+/* Pied de table */
+tfoot td {
+    font-weight: bold;
+}
 
-        form input,
-        form textarea {
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
+/* Messages vides */
+.empty {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
 
-        form button {
-            background-color: rgb(145, 16, 42);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+/* Formulaire */
+form {
+    margin-top: 2rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    max-width: 90%;
+    margin-inline: auto;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+}
 
-        form button:hover {
-            background-color: rgb(100, 10, 30);
-        }
+/* Champs formulaire */
+form input,
+form textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.4rem;
+    font-size: 1rem;
+}
 
-        .alert {
-            padding: 1rem;
-            margin: 2rem auto;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 1.1rem;
-        }
+/* Bouton */
+form button {
+    background-color: rgb(145, 16, 42);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-weight: bold;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+}
 
-        .alert.success {
-            margin-top: 1rem;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+/* Bouton hover */
+form button:hover {
+    background-color: rgb(100, 10, 30);
+}
 
-        .alert.error {
-            margin-top: 1rem;
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+/* Alertes */
+.alert {
+    padding: 1rem;
+    margin: 2rem auto;
+    width: 90%;
+    border-radius: 0.4rem;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 0.1rem solid #c3e6cb;
+}
+
+.alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 0.1rem solid #f5c6cb;
+}
+
+/* Responsive - petits écrans */
+@media (max-width: 900px) {
+    .box_panier {
+        width: 300px;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    table {
+        font-size: 0.7rem;
+        width: 100%;
+        /* Passe à 100% pour s’adapter au parent */
+        display: block;
+        /* Pour forcer le mode colonne */
+    }
+
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    th,
+    td {
+        display: block;
+        width: 100%;
+    }
+
+    thead tr {
+        /* On cache l'entête sur mobile */
+        display: none;
+    }
+
+    tbody tr {
+        margin-bottom: 1.5rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        padding: 0.8rem;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    }
+
+    tbody td {
+        padding: 0.6rem 0;
+        text-align: right;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        /* Permet retour à la ligne */
+        border-bottom: none;
+        font-size: 0.85rem;
+    }
+
+    tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: bold;
+        color: rgb(145, 16, 42);
+        white-space: nowrap;
+        text-align: left;
+        width: 45%;
+        font-size: 0.9rem;
+    }
+
+    /* Bouton supprimer adapté */
+    .btn-delete {
+        display: block;
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        background-color: rgb(145, 16, 42);
+        color: white;
+        border: none;
+        border-radius: 0.4rem;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-delete:hover {
+        background-color: rgb(100, 10, 30);
+    }
+
+    /* Ligne Total à payer en mode bloc */
+    tfoot tr {
+        display: block;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-top: 1rem;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        background: #f9f9f9;
+    }
+
+    tfoot td {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0;
+        text-align: right;
+        font-weight: bold;
+        font-size: 1.1rem;
+        border: none;
+        position: relative;
+    }
+
+    tfoot td {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0;
+        text-align: left;
+        /* changement ici */
+        font-weight: bold;
+        font-size: 1.1rem;
+        border: none;
+    }
+
+
+    tfoot td:last-child {
+        text-align: right;
+        padding-right: 1rem;
+    }
+
+    form {
+        padding: 1rem;
+    }
+
+    form input,
+    form textarea {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    form button {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .alert {
+        font-size: 0.95rem;
+    }
+}

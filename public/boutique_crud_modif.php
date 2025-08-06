@@ -43,7 +43,7 @@ foreach ($formats as $format) {
         $availableImages[$format] = [];
     }
 }
-    
+
 
 if ($id > 0) {
     $product = getProductById($pdo, $id);
@@ -107,12 +107,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $errors[] = "Erreur lors de la modification du produit.";
         }
-    }   
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,78 +124,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-<?php safeRequire('nav.php'); ?>
-<main class="main-content">
-    <h1>Modifier un produit</h1>
+    <?php safeRequire('nav.php'); ?>
+    <main class="main-content">
+        <h1>Modifier un produit</h1>
 
-    <form method="POST">
-    <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>" />
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>" />
 
-    <div>
-        <label for="name">Nom du produit :</label><br />
-        <input type="text" id="name" name="name" required
-            value="<?= htmlspecialchars($product['nom'] ?? $name ?? '') ?>" />
-    </div>
-
-    <div>
-        <label for="description">Description :</label><br />
-        <textarea id="description" name="description" rows="4"><?= htmlspecialchars($product['description'] ?? $description ?? '') ?></textarea>
-    </div>
-
-    <div>
-        <label for="category">Catégorie :</label><br />
-        <select id="category" name="category" required>
-            <option value="">-- Choisir une catégorie --</option>
-            <?php foreach ($categories as $cat): ?>
-                <option value="<?= htmlspecialchars($cat) ?>"
-                    <?= (($product['categorie'] ?? $category ?? '') === $cat) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($cat) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-
-    <fieldset>
-        <legend>Versions du produit (formats)</legend>
-        <?php
-        $formats = ['320', '768', '1200'];
-        foreach ($formats as $format):
-            $imgDir = __DIR__ . "/img/boutique/x$format";
-            $webDir = "/img/boutique/x$format";
-            $images = is_dir($imgDir) ? array_diff(scandir($imgDir), ['.', '..']) : [];
-        ?>
             <div>
-                <label for="version_<?= $format ?>">Image <?= $format ?> px :</label><br />
-                <select name="versions[<?= $format ?>]" id="version_<?= $format ?>" required>
-                    <option value="">-- Choisir une image dans x<?= $format ?> --</option>
-                    <?php foreach ($images as $img): ?>
-                        <option value="<?= htmlspecialchars($img) ?>"><?= htmlspecialchars($img) ?></option>
+                <label for="name">Nom du produit :</label><br />
+                <input type="text" id="name" name="name" required
+                    value="<?= htmlspecialchars($product['nom'] ?? $name ?? '') ?>" />
+            </div>
+
+            <div>
+                <label for="description">Description :</label><br />
+                <textarea id="description" name="description"
+                    rows="4"><?= htmlspecialchars($product['description'] ?? $description ?? '') ?></textarea>
+            </div>
+
+            <div>
+                <label for="category">Catégorie :</label><br />
+                <select id="category" name="category" required>
+                    <option value="">-- Choisir une catégorie --</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= htmlspecialchars($cat) ?>" <?= (($product['categorie'] ?? $category ?? '') === $cat) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($cat) ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-        <?php endforeach; ?>
-    </fieldset>
 
-    <div style="margin-top: 10px;">
-        <button type="submit">Modifier</button>
-    </div>
-</form>
+            <fieldset>
+                <legend>Versions du produit (formats)</legend>
+                <?php
+                $formats = ['320', '768', '1200'];
+                foreach ($formats as $format):
+                    $imgDir = __DIR__ . "/img/boutique/x$format";
+                    $images = is_dir($imgDir) ? array_diff(scandir($imgDir), ['.', '..']) : [];
+                    ?>
+                    <div style="margin-bottom: 1em;">
+                        <label for="version_<?= $format ?>">Image <?= $format ?> px :</label><br />
+                        <select name="versions[<?= $format ?>]" id="version_<?= $format ?>" required>
+                            <option value="">-- Choisir une image dans x<?= $format ?> --</option>
+                            <?php foreach ($images as $img): ?>
+                                <option value="<?= htmlspecialchars($img) ?>" <?= (isset($productVersions[$format]) && $productVersions[$format] === $img) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($img) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
 
-    <p><a href="product_list.php">← Retour à la liste des produits</a></p>
-</main>
+                        <button type="button" class="apply-to-all" data-format="<?= $format ?>" style="margin-left: 10px;">
+                            🔁 Appliquer cette image à tous les formats
+                        </button>
+
+                        <!-- Aperçu optionnel -->
+                        <br />
+                        <img id="preview_<?= $format ?>"
+                            src="<?= isset($productVersions[$format]) ? "/img/boutique/x$format/" . htmlspecialchars($productVersions[$format]) : '' ?>"
+                            alt="Preview <?= $format ?>"
+                            style="max-width: 150px; margin-top: 5px; display: <?= isset($productVersions[$format]) ? 'inline-block' : 'none' ?>;">
+                    </div>
+                <?php endforeach; ?>
+            </fieldset>
 
 
-    
-<?php 
+            <div style="margin-top: 10px;">
+                <button type="submit">Modifier</button>
+            </div>
+        </form>
+
+        <p><a href="product_list.php">← Retour à la liste des produits</a></p>
+    </main>
+
+
+
+    <?php
     includeFooter($contact, $partenaires);
-?>
+    ?>
 
-<script src="/public/js/scroll.js" defer></script>
-<script src="/public/js/nav_img.js" defer></script>
-<script src="/public/js/modal_image_background_nav.js" defer></script>
-<script src="/public/js/menuburger.js" defer></script>
-<script src="/public/js/modal_gallery.js" defer></script>
-<script src="/public/js/slide-partenaire.js" defer></script>
-<script src="/public/js/widget-ffr.js" defer></script>
+    <script src="/public/js/scroll.js" defer></script>
+    <script src="/public/js/nav_img.js" defer></script>
+    <script src="/public/js/modal_image_background_nav.js" defer></script>
+    <script src="/public/js/menuburger.js" defer></script>
+    <script src="/public/js/modal_gallery.js" defer></script>
+    <script src="/public/js/slide-partenaire.js" defer></script>
+    <script src="/public/js/chargement_edit_versions_image_produit.js" defer></script>
 </body>
+
 </html>

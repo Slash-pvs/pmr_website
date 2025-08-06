@@ -40,7 +40,7 @@ if ($id > 0) {
     }
 
     // Récupération des versions d’image liées
-    $stmt = $pdo->prepare("SELECT * FROM partenaire_versions WHERE partenaire_id = ? ORDER BY size ASC");
+    $stmt = $pdo->prepare("SELECT id, partenaire_id, format, size, path FROM partenaire_versions WHERE partenaire_id = ? ORDER BY size ASC");
     $stmt->execute([$id]);
     $responsiveImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -67,13 +67,6 @@ $selectedImages = [];
 foreach ($responsiveImages as $img) {
     $selectedImages[(string) $img['size']] = basename($img['path']);
 }
-
-/*
-// Debug : voir ce qui est récupéré
-echo '<pre>responsiveImages = ';
-print_r($responsiveImages);
-echo '</pre>';
-*/
 ?>
 
 <!DOCTYPE html>
@@ -105,12 +98,13 @@ echo '</pre>';
             <label for="lien_site">Site URL :</label><br />
             <input type="url" id="lien_site" name="lien_site"
                 value="<?= htmlspecialchars($partenaire['lien_site'] ?? '') ?>"><br><br>
+
             <fieldset>
                 <legend>Versions du logo (formats d’image)</legend>
+
                 <?php foreach ($formats as $format):
                     $images = $availableImages[$format];
                     $selected = $selectedImages[$format] ?? '';
-                    // Chemin complet de l'image sélectionnée pour l'affichage
                     $imagePath = $selected ? "/img/partenaire/x$format/$selected" : null;
                     ?>
                     <div style="margin-bottom: 1.5em;">
@@ -122,26 +116,25 @@ echo '</pre>';
                                     <?= htmlspecialchars($img) ?>
                                 </option>
                             <?php endforeach; ?>
-                        </select><br />
-                        <?php if ($imagePath): ?>
-                            <img src="<?= htmlspecialchars($imagePath) ?>" alt="Logo <?= $format ?> px"
-                                style="max-height: 60px; margin-top: 0.5em; border: 1px solid #ccc;">
-                        <?php else: ?>
-                            <small>Aucune image sélectionnée</small>
-                        <?php endif; ?>
+                        </select>
+
+                        <button type="button" class="apply-to-all" data-format="<?= $format ?>" style="margin-left: 10px;">
+                            🔁 Appliquer cette image à tous les formats
+                        </button><br>
+
+                        <img id="preview_<?= $format ?>" src="<?= htmlspecialchars($imagePath ?? '') ?>"
+                            alt="Logo <?= $format ?> px" style="max-height: 60px; margin-top: 0.5em; border: 1px solid #ccc;
+                <?= $imagePath ? '' : 'display:none;' ?>">
                     </div>
                 <?php endforeach; ?>
-            </fieldset>
-            <br>
+
+            </fieldset><br>
 
             <?php if (!empty($responsiveImages)): ?>
                 <label>Logo actuel :</label><br />
                 <picture>
-                    <?php foreach ($responsiveImages as $img):
-                        $media = (int) $img['size'];
-                        $src = htmlspecialchars($img['path']);
-                        ?>
-                        <source media="(max-width: <?= $media ?>px)" srcset="<?= $src ?>">
+                    <?php foreach ($responsiveImages as $img): ?>
+                        <source media="(max-width: <?= (int) $img['size'] ?>px)" srcset="<?= htmlspecialchars($img['path']) ?>">
                     <?php endforeach; ?>
                     <img src="<?= htmlspecialchars(end($responsiveImages)['path']) ?>" alt="Logo partenaire"
                         style="height: 50px;">
@@ -160,14 +153,15 @@ echo '</pre>';
     </main>
 
     <?php includeFooter($contact, $partenaires); ?>
-
+    <!-- Ajout de la variable images dans un attribut data -->
+    <div id="myDiv" data-images='<?= htmlspecialchars(json_encode($images), ENT_QUOTES, "UTF-8") ?>'></div>
     <script src="/public/js/scroll.js" defer></script>
     <script src="/public/js/nav_img.js" defer></script>
     <script src="/public/js/modal_image_background_nav.js" defer></script>
     <script src="/public/js/menuburger.js" defer></script>
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
-    <script src="/public/js/widget-ffr.js" defer></script>
+    <script src="/public/js/chargement_edit_versions_image_partenaire.js" defer></script>
 </body>
 
 </html>

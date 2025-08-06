@@ -9,7 +9,7 @@ function getAllArticles(PDO $pdo): array {
 
 // Récupère un article par ID
 function getArticleById(PDO $pdo, int $id): ?array {
-    $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = :id");
+    $stmt = $pdo->prepare("SELECT title, content, created_at, user_id, image_path, category FROM articles WHERE id = :id");
     $stmt->execute([':id' => $id]);
     $article = $stmt->fetch(PDO::FETCH_ASSOC);
     return $article ?: null;

@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 }
 
 // Récupérer toutes les présentations
-$stmt = $pdo->query("SELECT * FROM presentation ORDER BY id ASC");
+$stmt = $pdo->query("SELECT id, team_name, description FROM presentation ORDER BY id ASC");
 $presentations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -183,7 +183,6 @@ $presentations = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="/public/js/menuburger.js" defer></script>
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
-    <script src="/public/js/widget-ffr.js" defer></script>
 </body>
 
 </html>

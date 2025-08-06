@@ -15,6 +15,6 @@
     <?php endif; ?>
     <a class="boutique_nav" href="boutique.php">Notre boutique</a>
     <a href="panier.php">
-        🛒 Mon panier <span id="panier-count-mobile">0</span>
+        🛒 Mon panier <span id="panier-count-mobile"></span>
     </a>
 </div>

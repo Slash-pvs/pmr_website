@@ -49,7 +49,7 @@ $id = $_GET['id'] ?? 1;
 $availableImages = getAvailableImages();
 
 // Récupération des données de l'image_nav
-$imageNavSql = "SELECT * FROM image_nav WHERE id = :id";
+$imageNavSql = "SELECT id, image_path FROM image_nav WHERE id = :id;";
 $stmt = $pdo->prepare($imageNavSql);
 $stmt->execute(['id' => $id]);
 $imageNav = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -155,10 +155,6 @@ if (empty($versions) && !empty($imageNav['image_path'])) {
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
     <script src="/public/js/chargement_edit_versions_image_nav.js" defer></script>
-    <script>
-        const availableImages = <?= json_encode(array_map('basename', $availableImages)) ?>;
-        console.log("Images disponibles :", availableImages);
-    </script>
 </body>
 
 </html>

@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 }
 
 // Lecture de tous les contacts
-$stmt = $pdo->query("SELECT * FROM contacts ORDER BY id ASC");
+$stmt = $pdo->query("SELECT id, lieu, numero_tel, email FROM contacts ORDER BY id ASC;");
 $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 

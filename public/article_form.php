@@ -222,11 +222,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="/public/js/menuburger.js" defer></script>
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
-    <script src="/public/js/widget-ffr.js" defer></script>
-
-    <script>
-        const availableImages = <?= json_encode(array_map('basename', $availableImages)) ?>;
-        console.log("Images disponibles :", availableImages);
-    </script>
 </body>
 </html>

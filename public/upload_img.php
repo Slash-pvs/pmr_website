@@ -25,6 +25,7 @@ $partenaires = getAllPartners($pdo);
     <link rel="stylesheet" href="/public/css/style.css" />
     <link rel="stylesheet" href="/public/css/nav.css" />
     <link rel="stylesheet" href="/public/css/footer.css" />
+    <meta name="robots" content="noindex, nofollow"> <!-- empeche l'indexation du site web -->
 </head>
 
 <body>

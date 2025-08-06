@@ -31,7 +31,7 @@ $partenaires = getAllPartners($pdo);
   <link rel="stylesheet" href="/public/css/nav.css">
   <link rel="stylesheet" href="/public/css/footer.css">
   <link rel="stylesheet" href="/public/css/rgpd.css">
-  <title>Index</title>
+  <title>Politique de confidentialité</title>
 </head>
 
 <body>

@@ -19,10 +19,11 @@ function createProduct(PDO $pdo, string $nom, string $categorie, float $prix, in
 
 // Récupérer tous les produits
 function getAllProducts(PDO $pdo): array {
-    $sql = "SELECT * FROM produits ORDER BY id DESC";
+    $sql = "SELECT id, nom, categorie, prix, stock FROM produits ORDER BY id DESC";
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 // Récupérer toutes les catégories de produits (uniques)
 function getAllProductCategories(PDO $pdo): array {
@@ -132,7 +133,7 @@ function createProductVersion(PDO $pdo, int $produit_id, string $format, string 
 function fieldValue($postValue, $dbValue) {
     return htmlspecialchars($postValue ?? $dbValue ?? '');
 }
-    function formatImagePath($imageName) {
+function formatImagePath($imageName) {
         return '/img/boutique/' . basename($imageName);
     }
 function getAvailableImages(): array {

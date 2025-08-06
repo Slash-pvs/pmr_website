@@ -127,6 +127,5 @@ if (is_dir($galleryDir)) {
     <script src="/public/js/menuburger.js" defer></script>
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
-    <script src="/public/js/widget-ffr.js" defer></script>
 </body>
 </html>

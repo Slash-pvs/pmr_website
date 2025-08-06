@@ -4,24 +4,49 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Fonction : Vérifie si l'utilisateur est connecté
-function isUserLoggedIn(): bool {
+function isUserLoggedIn(): bool
+{
     return isset($_SESSION['user_id']);
 }
 
-// Fonction : Récupère les infos utilisateur
-function getUserInfo($pdo) {
-    if (isUserLoggedIn()) {
-        $userId = $_SESSION['user_id'];
-        $stmt = $pdo->prepare("SELECT username, email FROM users WHERE id = :id");
-        $stmt->execute([':id' => $userId]);
-        return $stmt->fetch();
-    }
-    return null;
+// Fonction générique : Vérifie si l'utilisateur connecté a un rôle donné
+function isUserRole(PDO $pdo, string $role): bool {
+    if (!isUserLoggedIn()) return false;
+
+    $userId = $_SESSION['user_id'];
+    $stmt = $pdo->prepare("SELECT role FROM users WHERE id = :id LIMIT 1");
+    $stmt->execute([':id' => $userId]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $user && $user['role'] === $role;
 }
 
+// Fonction spécifique : Vérifie si l'utilisateur est admin
+function isUserAdmin(PDO $pdo): bool {
+    return isUserRole($pdo, 'admin');
+}
+
+// Fonction : Récupère les infos utilisateur
+function getUserInfo(PDO $pdo): ?array
+{
+    if (isUserLoggedIn()) {
+        $userId = $_SESSION['user_id'];
+
+        $stmt = $pdo->prepare("SELECT username, email FROM users WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user === false) {
+            return null; // Pas trouvé
+        }
+        return $user;
+    }
+    return null; // Non connecté
+}
 
 // Fonction : Récupère les chemins d'images de la navigation
-function getNavImageWithVersions(PDO $pdo): array {
+function getNavImageWithVersions(PDO $pdo): array
+{
     $stmt = $pdo->query("SELECT image_path FROM image_nav ORDER BY id DESC LIMIT 1");
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -53,35 +78,45 @@ function getNavImageWithVersions(PDO $pdo): array {
     ];
 }
 
-
-
 // Fonction : Récupère les infos de contact
-function getContactInfo($pdo) {
+function getContactInfo($pdo)
+{
     $stmt = $pdo->prepare("SELECT email, numero_tel, lieu FROM contacts WHERE id = 1");
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // Fonction : Inclusion sécurisée de fichier
-function safeRequire($file) {
-    $filePath = __DIR__ . '/' . basename($file);
-    if (file_exists($filePath)) {
+function safeRequire(string $file): void
+{
+    // Évite les traversals en récupérant seulement le nom de fichier
+    $filename = basename($file);
+
+    // Chemin absolu vers le dossier des includes (ajuste selon ton arborescence)
+    $includeDir = __DIR__;
+
+    $filePath = $includeDir . '/' . $filename;
+
+    if (file_exists($filePath) && is_file($filePath)) {
         require_once $filePath;
     } else {
-        error_log("Fichier introuvable : " . $file);
-        echo "Erreur : fichier requis manquant.";
+        error_log("Fichier introuvable ou non sécurisé : " . $filePath);
+        echo "Erreur : fichier requis manquant ou non sécurisé.";
+        exit; // pour éviter de continuer
     }
 }
 
 // Fonction : Récupère les images de la galerie (limit)
-function getAllImages(PDO $pdo): array {
+function getAllImages(PDO $pdo): array
+{
     $stmt = $pdo->query("SELECT id, image_path, category FROM gallerie ORDER BY created_at DESC");
     $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     return enrichImagesWithVersions($pdo, $images);
 }
 
-function getImagesByCategory(PDO $pdo, string $category): array {
+function getImagesByCategory(PDO $pdo, string $category): array
+{
     $stmt = $pdo->prepare("SELECT id, image_path, category FROM gallerie WHERE category = :category ORDER BY created_at DESC");
     $stmt->execute([':category' => $category]);
     $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -89,7 +124,8 @@ function getImagesByCategory(PDO $pdo, string $category): array {
     return enrichImagesWithVersions($pdo, $images);
 }
 
-function enrichImagesWithVersions(PDO $pdo, array $images): array {
+function enrichImagesWithVersions(PDO $pdo, array $images): array
+{
     $allowedSizes = [320, 768, 1200];
     $result = [];
 
@@ -103,7 +139,7 @@ function enrichImagesWithVersions(PDO $pdo, array $images): array {
 
         $versions = [];
         foreach ($versionsData as $v) {
-            $size = (int)$v['size'];
+            $size = (int) $v['size'];
             if (in_array($size, $allowedSizes)) {
                 $versions[$size] = str_replace('/public', '', $v['path']);
             }
@@ -119,18 +155,17 @@ function enrichImagesWithVersions(PDO $pdo, array $images): array {
     return $result;
 }
 
-
-
-
 // Fonction : Récupère l'image de navigation
-function getNavImage($pdo): string {
+function getNavImage($pdo): string
+{
     $stmt = $pdo->prepare("SELECT image_path FROM image_nav LIMIT 1");
     $stmt->execute();
     $image = $stmt->fetch(PDO::FETCH_ASSOC);
     return $image['image_path'] ?? 'default_image_path.jpg';
 }
 // Fonction : Récupère les versions de l'image de navigation
-function getImageNavVersions(PDO $pdo, int $imageNavId): string {
+function getImageNavVersions(PDO $pdo, int $imageNavId): string
+{
     $stmt = $pdo->prepare("
         SELECT size, path 
         FROM image_nav_versions 
@@ -144,7 +179,8 @@ function getImageNavVersions(PDO $pdo, int $imageNavId): string {
     return json_encode($versions, JSON_UNESCAPED_SLASHES);
 }
 // Fonction : Inclusion du footer
-function includeFooter($contact, $partenaires) {
+function includeFooter($contact, $partenaires)
+{
     $filePath = __DIR__ . '/footer.php';
 
     if (file_exists($filePath)) {
@@ -155,21 +191,22 @@ function includeFooter($contact, $partenaires) {
     }
 }
 
-function renderFooter($contact, $partenaires) {
+function renderFooter($contact, $partenaires)
+{
     include __DIR__ . '/footer.php';
 }
 
-
 // Fonction : Vérifie si une image existe déjà
-function imageExists($pdo, string $imagePath): bool {
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM gallerie WHERE image_path = :image_path");
+function imageExists(PDO $pdo, string $imagePath): bool
+{
+    $stmt = $pdo->prepare("SELECT 1 FROM gallerie WHERE image_path = :image_path LIMIT 1");
     $stmt->execute([':image_path' => $imagePath]);
-    return $stmt->fetchColumn() > 0;
+    return (bool) $stmt->fetchColumn();
 }
 
-
 // Récupère tous les articles
-function getAllPosts($pdo): array {
+function getAllPosts($pdo): array
+{
     $stmt = $pdo->prepare("SELECT id, title, content, category, user_id, created_at, image_path FROM articles ORDER BY created_at DESC");
     $stmt->execute();
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -177,21 +214,24 @@ function getAllPosts($pdo): array {
 }
 
 // Articles par catégorie (avec validation recommandée)
-function getPostsByCategory($pdo, $category): array {
+function getPostsByCategory($pdo, $category): array
+{
     $stmt = $pdo->prepare("SELECT id, title, content, category, user_id, created_at, image_path FROM articles WHERE category = :category ORDER BY created_at DESC");
     $stmt->execute([':category' => $category]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Présentation équipe
-function getTeamDescription($pdo, string $teamName): ?string {
+function getTeamDescription($pdo, string $teamName): ?string
+{
     $stmt = $pdo->prepare("SELECT description FROM presentation WHERE team_name = :team_name LIMIT 1");
     $stmt->execute([':team_name' => $teamName]);
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
     return $data['description'] ?? null;
 }
 // Partenaires
-function getAllPartners(PDO $pdo): array {
+function getAllPartners(PDO $pdo): array
+{
     $sql = "
         SELECT 
             p.id, p.nom_fichier, p.lien_site,
@@ -226,14 +266,16 @@ function getAllPartners(PDO $pdo): array {
 }
 
 // Génère un token CSRF
-function generateCsrfToken(): string {
+function generateCsrfToken(): string
+{
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
     return $_SESSION['csrf_token'];
 }
 //récuperations des produits de la boutique 
-function AllProducts(PDO $pdo): array {
+function AllProducts(PDO $pdo): array
+{
     $sth = $pdo->prepare("
         SELECT p.id, p.nom, p.categorie, p.prix, p.stock,
                v.size, v.path
@@ -272,4 +314,19 @@ function AllProducts(PDO $pdo): array {
     }
 
     return array_values($produits);
+}
+function sanitizeFilename(string $filename): string
+{
+    // Ne garder que le nom du fichier sans chemin (évite ../)
+    $basename = basename($filename);
+
+    // Remplacer les caractères non alphanumériques par un tiret ou underscore
+    $safeName = preg_replace('/[^A-Za-z0-9\-\_\.]/', '_', $basename);
+
+    return $safeName;
+}
+
+function verifyCsrfToken($token): bool
+{
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }

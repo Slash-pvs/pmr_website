@@ -53,7 +53,7 @@
     <div class="div_footer">
         <!-- Logo PMR -->
         <picture>
-            <source media="(max-width: 480px)" srcset="/public/img/x320/logo_pmr_rond_320.webp">
+            <source media="(max-width: 800px)" srcset="/public/img/x320/logo_pmr_rond_320.webp">
             <source media="(max-width: 1024px)" srcset="/public/img/x768/logo_pmr_rond_768.webp">
             <img class="img_footer" src="/public/img/x1200/logo_pmr_rond_1200.webp" alt="Logo Pays Médoc Rugby">
         </picture>
