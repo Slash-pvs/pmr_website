@@ -75,18 +75,21 @@ $partenaires_form = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                         <td>
                             <?php if (!empty($p['chemin'])): ?>
-                                <img src="<?= htmlspecialchars($p['chemin']) ?>" alt="<?= htmlspecialchars($p['nom_fichier']) ?>" style="height:50px;" />
+                                <img src="<?= htmlspecialchars($p['chemin']) ?>"
+                                    alt="<?= htmlspecialchars($p['nom_fichier']) ?>" style="height:50px;" />
                             <?php else: ?>
                                 <em>Pas d’image</em>
                             <?php endif; ?>
                         </td>
                         <td>
                             <a href="partenaire_form.php?id=<?= $p['id'] ?>">Modifier</a> |
-                            <form method="POST" action="/includes/partenaire_action.php" style="display:inline" onsubmit="return confirm('Confirmer la suppression ?');">
+                            <form method="POST" action="/includes/partenaire_action.php" style="display:inline"
+                                onsubmit="return confirm('Confirmer la suppression ?');">
                                 <input type="hidden" name="action" value="delete" />
                                 <input type="hidden" name="id" value="<?= htmlspecialchars($p['id']) ?>" />
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>" />
-                                <button type="submit" style="background:none; border:none; color:#007BFF; cursor:pointer; padding:0; font-size:1em;">
+                                <button type="submit"
+                                    style="background:none; border:none; color:#007BFF; cursor:pointer; padding:0; font-size:1em;">
                                     Supprimer
                                 </button>
                             </form>
@@ -97,7 +100,7 @@ $partenaires_form = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     </main>
     <?php includeFooter($contact, $partenaires); ?>
-
+    <script src="/public/js/rewrite_url.js" defer></script>
     <script src="/public/js/scroll.js" defer></script>
     <script src="/public/js/nav_img.js" defer></script>
     <script src="/public/js/modal_image_background_nav.js" defer></script>

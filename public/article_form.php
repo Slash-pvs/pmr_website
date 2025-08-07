@@ -216,6 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php includeFooter($contact, $partenaires); ?>
 
+    <script src="/public/js/rewrite_url.js" defer></script>
     <script src="/public/js/scroll.js" defer></script>
     <script src="/public/js/nav_img.js" defer></script>
     <script src="/public/js/modal_image_background_nav.js" defer></script>
@@ -223,4 +224,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
 </body>
+
 </html>

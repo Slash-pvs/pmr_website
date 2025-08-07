@@ -26,7 +26,8 @@ $imagesInFolder = [];
 if (is_dir($galleryDir)) {
     $files = scandir($galleryDir);
     foreach ($files as $file) {
-        if ($file === '.' || $file === '..') continue;
+        if ($file === '.' || $file === '..')
+            continue;
 
         $filePath = $galleryDir . '/' . $file;
         $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
@@ -45,6 +46,7 @@ if (is_dir($galleryDir)) {
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -53,6 +55,7 @@ if (is_dir($galleryDir)) {
     <link rel="stylesheet" href="/public/css/nav.css" />
     <link rel="stylesheet" href="/public/css/footer.css" />
 </head>
+
 <body>
     <?php safeRequire('nav.php'); ?>
 
@@ -66,7 +69,12 @@ if (is_dir($galleryDir)) {
             <table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;">
                 <thead>
                     <tr>
-                        <th>ID</th><th>Titre</th><th>Catégorie</th><th>Date</th><th>Image</th><th>Actions</th>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Catégorie</th>
+                        <th>Date</th>
+                        <th>Image</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,12 +86,14 @@ if (is_dir($galleryDir)) {
                             <td><?= htmlspecialchars($article['created_at']) ?></td>
                             <td>
                                 <?php if (!empty($article['image_path'])): ?>
-                                    <img src="<?= $webImgPath . '/' . htmlspecialchars($article['image_path']) ?>" width="80" alt="Image article">
+                                    <img src="<?= $webImgPath . '/' . htmlspecialchars($article['image_path']) ?>" width="80"
+                                        alt="Image article">
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <a href="article_form.php?id=<?= $article['id'] ?>">✏️ Modifier</a><br>
-                                <form method="POST" action="/includes/article_delete.php" onsubmit="return confirm('Supprimer cet article ?');" style="display:inline;">
+                                <form method="POST" action="/includes/article_delete.php"
+                                    onsubmit="return confirm('Supprimer cet article ?');" style="display:inline;">
                                     <input type="hidden" name="id" value="<?= $article['id'] ?>" />
                                     <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>" />
                                     <button type="submit" style="background:red;color:white;border:none;">🗑️ Supprimer</button>
@@ -99,7 +109,8 @@ if (is_dir($galleryDir)) {
         <div style="display:flex; flex-wrap:wrap; gap:15px;">
             <?php foreach ($imagesInFolder as $img): ?>
                 <div style="text-align:center; border:1px solid #ccc; padding:10px;">
-                    <img src="<?= $webImgPath . '/' . htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($img) ?>" style="width:150px; height:auto;">
+                    <img src="<?= $webImgPath . '/' . htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($img) ?>"
+                        style="width:150px; height:auto;">
                     <p><?= htmlspecialchars($img) ?></p>
 
                     <?php if (isset($articlesByImage[$img])): ?>
@@ -121,6 +132,7 @@ if (is_dir($galleryDir)) {
     <?php includeFooter($contact, $partenaires); ?>
 
     <!-- Scripts -->
+    <script src="/public/js/rewrite_url.js" defer></script>
     <script src="/public/js/scroll.js" defer></script>
     <script src="/public/js/nav_img.js" defer></script>
     <script src="/public/js/modal_image_background_nav.js" defer></script>
@@ -128,4 +140,5 @@ if (is_dir($galleryDir)) {
     <script src="/public/js/modal_gallery.js" defer></script>
     <script src="/public/js/slide-partenaire.js" defer></script>
 </body>
+
 </html>

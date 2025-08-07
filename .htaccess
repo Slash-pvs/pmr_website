@@ -21,13 +21,5 @@ DirectoryIndex /public/index.php
 # Page d'erreur 500 personnalisée
 ErrorDocument 500 /public/500.html
 
-# Désactiver le cache + empêcher indexation
-<IfModule mod_headers.c>
-  Header set Cache-Control "no-cache, no-store, must-revalidate"
-  Header set Pragma "no-cache"
-  Header set Expires 0
-  Header set X-Robots-Tag "noindex, nofollow"
-</IfModule>
-
 # Activer support WebP
 AddType image/webp .webp

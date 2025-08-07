@@ -75,6 +75,7 @@ $descriptionPole = getTeamDescription($pdo, 'Pole Jeune');
    <div id="myDiv" data-images='<?= htmlspecialchars(json_encode($images), ENT_QUOTES, "UTF-8") ?>'></div>
 
    <!-- Scripts -->
+   <script src="/public/js/rewrite_url.js" defer></script>
    <script src="/public/js/scroll.js" defer></script>
    <script src="/public/js/nav_img.js" defer></script>
    <script src="/public/js/modal_image_background_nav.js" defer></script>

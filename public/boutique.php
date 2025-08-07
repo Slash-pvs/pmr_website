@@ -24,7 +24,7 @@ $partenaires = getAllPartners($pdo);
    <link rel="stylesheet" href="/public/css/nav.css">
    <link rel="stylesheet" href="/public/css/footer.css">
    <link rel="stylesheet" href="/public/css/boutique.css">
-   <title>Index</title>
+   <title>Boutique</title>
 </head>
 
 <body>
@@ -85,6 +85,7 @@ $partenaires = getAllPartners($pdo);
    ?>
 
    <!-- Scripts -->
+   <script src="/public/js/rewrite_url.js" defer></script>
    <script src="/public/js/scroll.js" defer></script>
    <script src="/public/js/nav_img.js" defer></script>
    <script src="/public/js/modal_image_background_nav.js" defer></script>
