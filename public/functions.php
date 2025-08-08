@@ -1,62 +1,4 @@
 <?php
-function handleRequest(): void {
-    $request = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
-    // Si l'URL contient un préfixe "public/", on l'enlève
-    if (strpos($request, 'public/') === 0) {
-        $request = substr($request, strlen('public/'));
-    }
-
-    // Liste des routes autorisées avec fichiers existants dans ton projet
-    $routes = [
-        '' => ['file' => 'index.php'],                 // Page d'accueil par défaut
-        'article_form' => ['file' => 'article_form.php'],
-        'article_list' => ['file' => 'article_list.php'],
-        'presentation_crud' => ['file' => 'presentation_crud.php'],
-        'contacts_crud' => ['file' => 'contacts_crud.php'],
-        'product_list' => ['file' => 'product_list.php'],
-        'partenaires_crud' => ['file' => 'partenaires_crud.php'],
-        'upload_img' => ['file' => 'upload_img.php'],
-        'edit_image_nav' => ['file' => 'edit_image_nav.php'],
-        'list_img' => ['file' => 'list_img.php'],
-        'dashboard' => ['file' => 'dashboard.php', 'auth' => true],
-        'contact' => ['file' => 'contact.php'],
-        'page_login' => ['file' => 'page_login.php'],
-        'panier' => ['file' => 'panier.php'],
-        'logout' => ['file' => 'logout.php', 'auth' => true],
-    ];
-
-    if (array_key_exists($request, $routes)) {
-        $route = $routes[$request];
-
-        // Vérifier si la page nécessite une authentification
-        if (!empty($route['auth']) && !isUserLoggedIn()) {
-            http_response_code(403);       // Accès interdit
-            require __DIR__ . '/403.php';  // Page 403 personnalisée
-            return;
-        }
-
-        // Vérifier si la page nécessite les droits admin
-        if (!empty($route['admin']) && !isAdmin()) {
-            http_response_code(403);       // Accès interdit
-            require __DIR__ . '/403.php';  // Page 403 personnalisée
-            return;
-        }
-
-        // Inclure le fichier correspondant à la route
-        require __DIR__ . '/' . $route['file'];
-    } else {
-        // Route non trouvée -> 404
-        http_response_code(404);
-        require __DIR__ . '/404.php';  // Page 404 personnalisée
-    }
-}
-
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Fonction : Vérifie si l'utilisateur est connecté
 function isUserLoggedIn(): bool
 {
@@ -79,7 +21,58 @@ function isUserRole(PDO $pdo, string $role): bool {
 function isUserAdmin(PDO $pdo): bool {
     return isUserRole($pdo, 'admin');
 }
+function handleRequest(PDO $pdo): void {
+    $request = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
+    if (strpos($request, 'public/') === 0) {
+        $request = substr($request, strlen('public/'));
+    }
+
+    $routes = [
+        '' => ['file' => 'index.php'],
+        'article_form' => ['file' => 'article_form.php'],
+        'article_list' => ['file' => 'article_list.php'],
+        'presentation_crud' => ['file' => 'presentation_crud.php'],
+        'contacts_crud' => ['file' => 'contacts_crud.php'],
+        'product_list' => ['file' => 'product_list.php'],
+        'partenaires_crud' => ['file' => 'partenaires_crud.php'],
+        'upload_img' => ['file' => 'upload_img.php'],
+        'edit_image_nav' => ['file' => 'edit_image_nav.php'],
+        'list_img' => ['file' => 'list_img.php'],
+        'dashboard' => ['file' => 'dashboard.php', 'auth' => true],
+        'contact' => ['file' => 'contact.php'],
+        'page_login' => ['file' => 'page_login.php'],
+        'panier' => ['file' => 'panier.php'],
+        'logout' => ['file' => 'logout.php', 'auth' => true],
+    ];
+
+    if (array_key_exists($request, $routes)) {
+        $route = $routes[$request];
+
+        if (!empty($route['auth']) && !isUserLoggedIn()) {
+            http_response_code(403);
+            require __DIR__ . '/403.php';
+            return;
+        }
+
+        if (!empty($route['admin']) && !isUserAdmin($pdo)) {
+            http_response_code(403);
+            require __DIR__ . '/403.php';
+            return;
+        }
+
+        require __DIR__ . '/' . $route['file'];
+    } else {
+        http_response_code(404);
+        require __DIR__ . '/404.php';
+    }
+}
+
+
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // Fonction : Récupère les infos utilisateur
 function getUserInfo(PDO $pdo): ?array
 {

@@ -3,12 +3,11 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 session_start();
-handleRequest();
 // Inclusion des fichiers nécessaires
 require_once __DIR__ . '/functions.php';
 $pdo = require __DIR__ . '/db.php';
+handleRequest($pdo);
 // Récupérer les images selon la catégorie
 $tag = isset($_GET['tag']) ? trim($_GET['tag']) : '';
 $images = ($tag === '') ? getAllImages($pdo) : getImagesByCategory($pdo, $tag);

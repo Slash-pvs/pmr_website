@@ -13,7 +13,7 @@ if (session_status() == PHP_SESSION_NONE) {
 // Inclure les fonctions et la base de données
 require_once __DIR__ . '/functions.php';
 $pdo = require __DIR__ . '/db.php';
-
+handleRequest($pdo);
 $errorMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
-            die("Redirection vers dashboard.php"); // pour tester
+            // die("Redirection vers dashboard.php"); // <-- Supprimer ou commenter cette ligne
             header('Location: dashboard.php');
             exit;
         }
