@@ -1,4 +1,32 @@
 <?php
+function handleRequest(): void {
+    $request = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+
+    switch ($request) {
+        case '':
+        case 'accueil':
+            require __DIR__ . '/home.php';
+            break;
+
+        case 'connexion':
+            require __DIR__ . '/page_login.php';
+            break;
+
+        case 'dashboard':
+            require __DIR__ . '/dashboard.php';
+            break;
+
+        case 'contact':
+            require __DIR__ . '/contact.php';
+            break;
+
+        default:
+            http_response_code(404);
+            require __DIR__ . '/404.php';
+            break;
+    }
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

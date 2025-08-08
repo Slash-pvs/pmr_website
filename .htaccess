@@ -1,16 +1,6 @@
 # Activer le moteur de réécriture
 RewriteEngine On
 
-# Rediriger vers public/index.php si on est à la racine
-RewriteCond %{REQUEST_URI} ^/?$
-RewriteRule ^$ /public/index.php [L]
-
-# Masquer le dossier 'public' dans l'URL sauf pour les fichiers
-RewriteCond %{REQUEST_URI} !^/public/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /public/$1 [L]
-
 # Forcer HTTPS
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -18,7 +8,16 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # Définir index.php comme page par défaut
 DirectoryIndex /public/index.php
 
-# Page d'erreur 500 personnalisée
+# Rediriger vers /public/index.php si à la racine
+RewriteCond %{REQUEST_URI} ^/?$
+RewriteRule ^$ /public/index.php [L]
+
+# Rediriger toutes les URL non existantes vers /public/index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /public/index.php [L,QSA]
+
+# Page d'erreur personnalisée
 ErrorDocument 500 /public/500.html
 
 # Activer support WebP
