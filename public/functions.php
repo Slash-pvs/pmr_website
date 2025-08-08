@@ -22,6 +22,7 @@ function handleRequest(): void {
         'dashboard' => ['file' => 'dashboard.php', 'auth' => true],
         'contact' => ['file' => 'contact.php'],
         'page_login' => ['file' => 'page_login.php'],
+        'panier' => ['file' => 'panier.php'],
         'logout' => ['file' => 'logout.php', 'auth' => true],
     ];
 
