@@ -2,30 +2,55 @@
 function handleRequest(): void {
     $request = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-    switch ($request) {
-        case '':
-        case 'accueil':
-            require __DIR__ . '/home.php';
-            break;
+    // Si l'URL contient un préfixe "public/", on l'enlève
+    if (strpos($request, 'public/') === 0) {
+        $request = substr($request, strlen('public/'));
+    }
 
-        case 'connexion':
-            require __DIR__ . '/page_login.php';
-            break;
+    // Liste des routes autorisées avec fichiers existants dans ton projet
+    $routes = [
+        '' => ['file' => 'index.php'],                 // Page d'accueil par défaut
+        'article_form' => ['file' => 'article_form.php'],
+        'article_list' => ['file' => 'article_list.php'],
+        'presentation_crud' => ['file' => 'presentation_crud.php'],
+        'contacts_crud' => ['file' => 'contacts_crud.php'],
+        'product_list' => ['file' => 'product_list.php'],
+        'partenaires_crud' => ['file' => 'partenaires_crud.php'],
+        'upload_img' => ['file' => 'upload_img.php'],
+        'edit_image_nav' => ['file' => 'edit_image_nav.php'],
+        'list_img' => ['file' => 'list_img.php'],
+        'dashboard' => ['file' => 'dashboard.php', 'auth' => true],
+        'contact' => ['file' => 'contact.php'],
+        'page_login' => ['file' => 'page_login.php'],
+        'logout' => ['file' => 'logout.php', 'auth' => true],
+    ];
 
-        case 'dashboard':
-            require __DIR__ . '/dashboard.php';
-            break;
+    if (array_key_exists($request, $routes)) {
+        $route = $routes[$request];
 
-        case 'contact':
-            require __DIR__ . '/contact.php';
-            break;
+        // Vérifier si la page nécessite une authentification
+        if (!empty($route['auth']) && !isUserLoggedIn()) {
+            http_response_code(403);       // Accès interdit
+            require __DIR__ . '/403.php';  // Page 403 personnalisée
+            return;
+        }
 
-        default:
-            http_response_code(404);
-            require __DIR__ . '/404.php';
-            break;
+        // Vérifier si la page nécessite les droits admin
+        if (!empty($route['admin']) && !isAdmin()) {
+            http_response_code(403);       // Accès interdit
+            require __DIR__ . '/403.php';  // Page 403 personnalisée
+            return;
+        }
+
+        // Inclure le fichier correspondant à la route
+        require __DIR__ . '/' . $route['file'];
+    } else {
+        // Route non trouvée -> 404
+        http_response_code(404);
+        require __DIR__ . '/404.php';  // Page 404 personnalisée
     }
 }
+
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

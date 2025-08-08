@@ -55,7 +55,7 @@ $partenaires = getAllPartners($pdo);
     <?php includeFooter($contact, $partenaires); ?>
 
     <!-- Scripts -->
-     <script src="/public/js/rewrite_url_ajax.js" defer></script>
+     <script src="/public/js/rewrite_url.js" defer></script>
     <script src="/public/js/scroll.js" defer></script>
     <script src="/public/js/nav_img.js" defer></script>
     <script src="/public/js/modal_image_background_nav.js" defer></script>
