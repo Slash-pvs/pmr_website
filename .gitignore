@@ -13,7 +13,7 @@ config.php
 *.pem
 
 # --- Images à ignorer ---
-*.webp
+img/**/*.webp
 
 # --- Node.js (si utilisé) ---
 node_modules/
