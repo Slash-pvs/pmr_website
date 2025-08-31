@@ -1,0 +1,470 @@
+/* --- LIGNE COLORÉE --- */
+.hr {
+  border: 0;
+  border-top: 0.75rem solid rgb(145, 16, 42);
+  width: 100%;
+}
+
+/* --- NAVBAR GLOBALE --- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: rgb(145, 16, 42);
+  width: 100%;
+  height: 5rem;
+  /* Ajuster la hauteur de la navbar */
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  margin: 0;
+  /* Enlever toute marge supplémentaire */
+}
+
+/* --- NAV CONTENEUR --- */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 5rem;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  /* Enlever toute marge supplémentaire */
+}
+
+/* --- RÉSEAUX SOCIAUX À GAUCHE --- */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: absolute;
+  left: 0;
+  margin-left: 1rem;
+}
+
+.facebook-icon,
+.insta-icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* --- LOGO CENTRÉ, MAIS DÉPLACÉ VERS LE BAS --- */
+.img_nav {
+  width: 8rem;
+  height: 8rem;
+  object-fit: contain;
+  position: absolute;
+  top: 95%;
+  /* Déplacer le logo plus bas */
+  left: 55%;
+  transform: translate(-50%, -50%);
+  z-index: 1002;
+  border: 0.25rem solid rgb(145, 16, 42);
+  border-radius: 50%;
+  transition: width 0.3s ease, height 0.3s ease;
+  background-color: white;
+}
+
+/* --- BOUTIQUE À DROITE --- */
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-right a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-right a:hover {
+  color: #f1f1f1;
+}
+
+/* --- LIENS NAV --- */
+.nav a {
+  color: white;
+  font-size: 1.2rem;
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  display: inline-block;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* --- BURGER MENU --- */
+.burger-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  cursor: pointer;
+  position: fixed;        
+  left: 0;           
+  padding-left: 20px; 
+  z-index: 1000;   
+}
+
+
+
+.burger-menu div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+}
+
+/* --- MENU DÉROULANT --- */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.page_pmr {
+  padding: 1rem 1.5rem;
+  display: inline-block;
+  color: #fff;
+  background-color: rgb(145, 16, 42);
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.page_pmr:hover {
+  background-color: rgb(100, 10, 30);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 180px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  top: 100%;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.no_shadow {
+  box-shadow: none !important;
+}
+
+/* --- NAVBAR BACKGROUND IMAGE --- */
+#navBar {
+  background-image: url('/img/image_nav/imgnav.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  position: relative;
+  padding-top: 5rem;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  /* ... reste inchangé ... */
+.burger-menu {
+  display: flex;
+}
+  /* NAVBAR GLOBALE */
+  .navbar {
+    background-color: rgb(145, 16, 42);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    padding: 0 1rem;
+  }
+
+  .nav-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    position: static;
+    /* 👈 enlever le position:absolute */
+    margin-left: 0;
+    /* 👈 enlever le margin-left */
+  }
+  /* Optionnel : centrer verticalement plus précisément */
+  .facebook-icon,
+  .insta-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .nav-right {
+    display: none;
+  }
+
+
+
+  .mobile-menu {
+    display: none;
+  }
+
+  .dropdown,
+  .dropdown-content {
+    display: none !important;
+  }
+
+}
+
+@media (max-width: 768px) {
+.burger-menu {
+  display: flex;
+}
+  /* panier */
+  .panier-link {
+    font-size: 1.5rem;
+  }
+
+  #panier-count {
+    font-size: 0.65rem;
+    padding: 1.5px 5px;
+    top: -6px;
+    right: -8px;
+  }
+
+  /* Supprimer le logo PMR */
+  .img_nav {
+    display: none !important;
+  }
+
+  /* NAVBAR en ligne */
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 5rem;
+    max-width: 768px;
+  }
+
+  .nav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Réseaux sociaux à gauche */
+  .nav-left {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-left: 0;
+  }
+
+  .facebook-icon,
+  .insta-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  /* Masquer autres éléments inutiles sur mobile */
+  .nav-right,
+  .dropdown,
+  .dropdown-content,
+  #navBar {
+    display: none !important;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+
+  #mainContent {
+    margin-top: 6rem;
+    /* ajuste selon la hauteur de ta navbar */
+  }
+
+  .navbar {
+    border-bottom: 4px solid white;
+    /* Ajouter un contour blanc en bas de la navbar */
+  }
+}
+
+
+/* --- MENU BURGER DÉROULANT --- */
+/* Styles pour le menu mobile */
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(145, 16, 42);
+  /* même couleur que la navbar */
+  position: absolute;
+  top: 5rem;
+  /* positionné juste en dessous de la navbar (5rem de haut) */
+  left: 0;
+  /* collé à gauche */
+  width: 100%;
+  z-index: 1001;
+  padding: 1rem 0;
+}
+
+.mobile-menu a {
+  color: white;
+  padding: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-menu a:hover {
+  background-color: rgb(100, 10, 30);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* --- MODALE RESPONSIVE --- */
+.modal {
+  display: none;
+  /* Cachée par défaut */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  /* Fond sombre plus marqué */
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/* Conteneur de contenu de la modale */
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Image dans la modale */
+.modal-content img {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Légende de l’image */
+#caption {
+  font-size: 1rem;
+  color: rgb(145, 16, 42);
+  text-align: center;
+  margin-top: 1rem;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Bouton de fermeture */
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.8rem;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  z-index: 1003;
+}
+
+.close:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* panier */
+/* Panier wrapper */
+.panier-wrapper {
+  position: relative;
+  margin-left: 1rem;
+}
+
+/* Lien du panier */
+.panier-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.8rem;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.panier-link:hover {
+  transform: scale(1.1);
+}
+
+/* Compteur panier */
+#panier-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  min-width: 18px;
+  text-align: center;
+  line-height: 1;
+}

@@ -1,0 +1,12 @@
+# Bloquer l'accès direct au fichier config.php
+<Files "config.php">
+    Require all denied
+</Files>
+
+# Bloquer l'accès à tout le répertoire config/
+<Directory "/home/uexockd/www">
+    Require all denied
+</Directory>
+
+# Empêcher l’indexation des répertoires
+Options -Indexes

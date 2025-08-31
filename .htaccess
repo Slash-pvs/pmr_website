@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# 2. Si la requête n'est pas un fichier ou dossier existant, servir index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+
+# Pages d'erreur personnalisées
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.html
+
+# Support WebP
+AddType image/webp .webp

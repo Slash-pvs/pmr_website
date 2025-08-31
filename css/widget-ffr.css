@@ -1,0 +1,340 @@
+div.slick-track{
+max-width: 1000px;
+}
+div .slick-list{
+  display: flex;
+  justify-content: center;
+}
+/* ====== Conteneur principal du widget ====== */
+#customWidgetContainer {
+  max-width: 56.25rem; /* ≈900px */
+  margin: 1.875rem auto; /* ≈30px */
+  padding: 1.25rem; /* ≈20px */
+  background: #ffffff;
+  border-radius: 0.625rem; /* 10px */
+  box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ====== Style général du widget FFR copié ====== */
+.competitions_ffr_widget {
+  width: 100%;
+}
+
+/* ====== En-tête du widget avec fond personnalisé ====== */
+.competitions_ffr_widget__header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.25rem; /* ≈20px */
+  background-color: rgb(145, 16, 42); /* Fond personnalisé */
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+}
+
+.competitions_ffr_widget__header h2 {
+  font-size: 1.625rem; /* ≈26px */
+  color: white; /* Texte en blanc */
+  margin-bottom: 0.625rem; /* ≈10px */
+}
+
+/* Supprimer le style des liens dans l'en-tête */
+.competitions_ffr_widget__header a {
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* ====== Section : Calendrier, Dernière journée, Classement ====== */
+.competitions_ffr_widget__calendar_tab,
+.competitions_ffr_widget__last_day_tab,
+.competitions_ffr_widget__ranking_tab {
+  background: #f9f9f9;
+  padding: 1.25rem; /* ≈20px */
+  margin-bottom: 1.5625rem; /* ≈25px */
+  border-radius: 0.5rem;
+  width: 100%;
+  border: 0.0625rem solid #ddd;
+}
+
+/* ====== Dernier match et résultat journée ====== */
+.competitions_ffr_widget__calendar_tab,
+.competitions_ffr_widget__last_day_tab {
+  width: 100%;
+  padding: 1.25rem; /* ≈20px */
+  margin-bottom: 1.5625rem; /* ≈25px */
+  background-color: #fff;
+  border-radius: 0.375rem; /* ≈6px */
+  border: 0.0625rem solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Espacement entre les éléments */
+  box-sizing: border-box;
+}
+
+.competitions_ffr_widget__calendar_tab h3,
+.competitions_ffr_widget__last_day_tab h3 {
+  font-size: 1.25rem; /* ≈20px */
+  font-weight: bold;
+  margin-bottom: 0.625rem; /* ≈10px */
+  color: #333;
+}
+div.competitions_ffr_widget__last_day_tab competitions_ffr_widget_tab__not_selected{
+  display: flex;
+  flex-direction: column;
+  align-content: center; 
+}
+.competitions_ffr_widget__calendar_tab .competitions_ffr_widget__match_resume__item,
+.competitions_ffr_widget__last_day_tab .competitions_ffr_widget__match_resume__item {
+  background-color: #f9f9f9;
+  padding: 1rem 1.25rem; /* ≈16px 20px */
+  border-radius: 0.375rem; /* ≈6px */
+  border: 0.0625rem solid #e0e0e0;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.competitions_ffr_widget__calendar_tab .competitions_ffr_widget__match_resume__item:hover,
+.competitions_ffr_widget__last_day_tab .competitions_ffr_widget__match_resume__item:hover {
+  background-color: #f0f8ff;
+}
+
+.competitions_ffr_widget__calendar_tab .competitions_ffr_widget__match_resume__item__club,
+.competitions_ffr_widget__last_day_tab .competitions_ffr_widget__match_resume__item__club {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem; /* ≈10px */
+}
+
+.competitions_ffr_widget__calendar_tab .competitions_ffr_widget__match_resume__item__club_name,
+.competitions_ffr_widget__last_day_tab .competitions_ffr_widget__match_resume__item__club_name {
+  font-size: 1rem; /* ≈16px */
+  font-weight: bold;
+}
+
+.competitions_ffr_widget__calendar_tab .competitions_ffr_widget__match_resume__item__score_container,
+.competitions_ffr_widget__last_day_tab .competitions_ffr_widget__match_resume__item__score_container {
+  font-size: 1.125rem; /* ≈18px */
+  font-weight: bold;
+}
+
+.competitions_ffr_widget__calendar_tab .competitions_ffr_widget__match_resume__item__club img,
+.competitions_ffr_widget__last_day_tab .competitions_ffr_widget__match_resume__item__club img,
+.competitions_ffr_widget__calendar_tab .competitions_ffr_widget__match_resume__item__club object,
+.competitions_ffr_widget__last_day_tab .competitions_ffr_widget__match_resume__item__club object {
+  width: 2.5rem; /* ≈40px */
+  height: 2.5rem; /* ≈40px */
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  border: 0.0625rem solid #ccc;
+}
+/* ====== Matchs Résumés (liste des matchs) ====== */
+.competitions_ffr_widget__match_resume competitions_ffr_widget__match_resume_vertical{
+    width: 60rem;
+    display: flex;
+}
+.competitions_ffr_widget__match_resume {
+  width: 100%;
+  max-width: 45rem; /* ≈720px */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Espace entre les items */
+  box-sizing: border-box;
+  padding: 1rem; /* ≈16px */
+}
+
+.competitions_ffr_widget__match_resume__item {
+  width: 100%;
+  max-width: 40rem; /* ≈640px */
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 0.75rem 1.25rem; /* ≈12px 20px */
+  border-radius: 0.375rem; /* ≈6px */
+  border: 0.0625rem solid #e0e0e0;
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+}
+
+.competitions_ffr_widget__match_resume__item:hover {
+  background-color: #f0f8ff;
+}
+
+.competitions_ffr_widget__match_resume__item__club {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem; /* ≈10px */
+}
+
+.competitions_ffr_widget__match_resume__item__club_name {
+  font-size: 1rem; /* ≈16px */
+  font-weight: bold;
+}
+
+.competitions_ffr_widget__match_resume__item__score_container {
+  font-size: 1.125rem; /* ≈18px */
+  font-weight: bold;
+}
+
+.competitions_ffr_widget__match_resume__item__club img,
+.competitions_ffr_widget__match_resume__item__club object {
+  width: 2.5rem; /* ≈40px */
+  height: 2.5rem; /* ≈40px */
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  border: 0.0625rem solid #ccc;
+}
+
+/* ====== Si pas de classement disponible ====== */
+.competitions_ffr_widget__ranking_tab__empty_message {
+  text-align: center;
+  font-size: 1.125rem; /* ≈18px */
+  color: #777;
+  margin-top: 1.25rem; /* ≈20px */
+}
+
+.competitions_ffr_widget__ranking_tab__empty_description {
+  text-align: center;
+  font-size: 0.875rem; /* ≈14px */
+  color: #999;
+}
+
+/* ====== Cacher les boutons de navigation et filtres ====== */
+.competitions_ffr_widget nav,
+.competitions_ffr_widget button {
+  display: none !important;
+}
+
+/* ====== Bouton voir plus (si existant) ====== */
+.competitions_ffr_widget__bottom_link {
+  display: inline-block;
+  margin-top: 1.25rem; /* ≈20px */
+  padding: 0.625rem 1.125rem; /* ≈10px 18px */
+  background-color: rgb(145, 16, 42); /* Fond personnalisé pour les boutons */
+  color: #000; /* Texte en noir */
+  text-decoration: none;
+  border-radius: 0.3125rem; /* ≈5px */
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.competitions_ffr_widget__bottom_link:hover {
+  background-color: #9b0f36; /* Teinte plus sombre au survol */
+}
+
+/* ====== Enlever les styles par défaut des liens dans tout le widget ====== */
+.competitions_ffr_widget a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* ====== Match Résumé (centré et adapté à la taille) ====== */
+.competitions_ffr_widget__match_resume.competitions_ffr_widget__match_resume_vertical {
+  width: 100rem;
+}
+@media (max-width: 786px) {
+  .competitions_ffr_widget{
+    max-width: 600px;
+  }
+}
+/* ====== Mobile (max-width: 600px) ====== */
+@media (max-width: 600px) {
+  .competitions_ffr_widget{
+    max-width: 600px;
+  }
+  /* ============================= */
+  /*  Match Resume (Liste des matchs) */
+  /* ============================= */
+  .competitions_ffr_widget__match_resume {
+    max-width: 22.5rem; /* ≈360px */
+    padding: 0.5rem; /* Moins de padding pour un meilleur ajustement */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Espacement entre les éléments */
+  }
+  /* ============================ */
+  /*  Vertical Match Resume */
+  /* ============================ */
+  .competitions_ffr_widget__match_resume_vertical {
+    max-width: 22.5rem; /* ≈360px */
+    padding: 0.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+   .competitions_ffr_widget__match_resume.competitions_ffr_widget__match_resume_vertical {
+  width: 100%;
+}
+.competitions_ffr_widget__match_resume__item{
+width: 100%;
+ max-width: 22.5rem; /* ≈360px */
+}
+  /* ============================ */
+  /*  Match Resume Items */
+  /* ============================ */
+  .competitions_ffr_widget__match_resume__item {
+    width: 100%;
+    padding: 0.5rem 1rem; /* Réduction du padding pour mobile */
+    display: flex;
+    flex-direction: column; /* Empile les éléments sur mobile */
+    gap: 0.625rem; /* Espacement entre les éléments */
+    background-color: #fff;
+    border-radius: 0.375rem; /* ≈6px */
+    border: 0.0625rem solid #e0e0e0;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+  }
+
+  .competitions_ffr_widget__match_resume__item:hover {
+    background-color: #f0f8ff;
+  }
+
+  /* ============================ */
+  /*  Club Name */
+  /* ============================ */
+  .competitions_ffr_widget__match_resume__item__club_name {
+    font-size: 0.875rem; /* Réduction de la taille du texte */
+    font-weight: bold;
+  }
+
+  /* ============================ */
+  /*  Club Image */
+  /* ============================ */
+  .competitions_ffr_widget__match_resume__item__club img,
+  .competitions_ffr_widget__match_resume__item__club object {
+    width: 2.25rem; /* Réduction de la taille des images */
+    height: 2.25rem;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #fff;
+    border: 0.0625rem solid #ccc;
+  }
+
+  /* ============================ */
+  /*  Score Container */
+  /* ============================ */
+  .competitions_ffr_widget__match_resume__item__score_container {
+    font-size: 1rem; /* Réduction de la taille du score */
+    font-weight: bold;
+  }
+div.slick-slide{
+width:320px;
+}
+div.slick-track{
+display: flex;
+flex-direction: column;
+max-width: 300px;
+}
+}

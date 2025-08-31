@@ -1,0 +1,29 @@
+# --- Fichiers système ---
+.DS_Store
+Thumbs.db
+
+# --- Logs et temporaires ---
+*.log
+*.tmp
+
+# --- Fichiers sensibles ---
+config.php
+*.env
+*.key
+*.pem
+
+# --- Images à ignorer ---
+*.webp
+
+# --- Node.js (si utilisé) ---
+node_modules/
+dist/
+build/
+
+# --- Python (si utilisé) ---
+venv/
+__pycache__/
+*.pyc
+
+# --- Autres ---
+.cache/
