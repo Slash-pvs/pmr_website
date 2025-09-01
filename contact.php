@@ -52,7 +52,7 @@ $partenaires = enrichPartnersWithVersions($pdo, $partenaires);
          <p class="error-msg">Une erreur est survenue lors de l'envoi. Veuillez réessayer.</p>
       <?php endif; ?>
 
-      <form action="/public/includes/traitement_contact.php" method="post">
+      <form action="/includes/traitement_contact.php" method="post">
          <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
 
          <!-- Champ Honeypot caché -->

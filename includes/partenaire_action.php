@@ -1,73 +1,65 @@
 <?php
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-session_start();
 
-require_once __DIR__ . '/../db.php';       // Connexion PDO dans $pdo
-require_once __DIR__ . '/../functions.php'; // Fonctions utiles
+require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../functions.php';
 
-// Vérifier accès utilisateur
+// Vérification accès utilisateur
 if (!isset($_SESSION['user_id'])) {
-    die("Accès non autorisé.");
+    die("⛔ Accès non autorisé.");
 }
 
-// Vérifier CSRF token
+// Vérification CSRF
 if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die("Jeton CSRF invalide.");
+    die("🔒 Jeton CSRF invalide.");
 }
 
+// Récupération des données POST
 $action = $_POST['action'] ?? '';
 $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 $nomFichier = trim($_POST['nom_fichier'] ?? '');
 $lienSite = trim($_POST['lien_site'] ?? '');
 $versions = $_POST['versions'] ?? [];
 
-// Validation pour create et update
-if (in_array($action, ['create', 'update'])) {
-    if (empty($nomFichier)) {
-        die("Le nom du fichier est obligatoire.");
-    }
+// Validation minimale pour create et update
+if (in_array($action, ['create', 'update']) && empty($nomFichier)) {
+    die("Le nom du fichier est obligatoire.");
 }
 
-$pdo->beginTransaction();
-
 try {
+    $pdo->beginTransaction();
+
     if ($action === 'create') {
-        // Insert sans chemin (sera mis à jour après upload)
         $stmt = $pdo->prepare("INSERT INTO partenaires (nom_fichier, lien_site, date_ajout, visible) VALUES (?, ?, NOW(), 1)");
         $stmt->execute([$nomFichier, $lienSite]);
         $id = $pdo->lastInsertId();
 
     } elseif ($action === 'update' && $id > 0) {
-        // Update texte (sans virgule en trop)
         $stmt = $pdo->prepare("UPDATE partenaires SET nom_fichier = ?, lien_site = ? WHERE id = ?");
         $stmt->execute([$nomFichier, $lienSite, $id]);
 
-        // Supprimer anciennes versions
+        // Supprime les anciennes versions
         $stmt = $pdo->prepare("DELETE FROM partenaire_versions WHERE partenaire_id = ?");
         $stmt->execute([$id]);
 
     } elseif ($action === 'delete' && $id > 0) {
-        // Supprimer versions associées
         $stmt = $pdo->prepare("DELETE FROM partenaire_versions WHERE partenaire_id = ?");
         $stmt->execute([$id]);
 
-        // Supprimer partenaire
         $stmt = $pdo->prepare("DELETE FROM partenaires WHERE id = ?");
         $stmt->execute([$id]);
 
         $pdo->commit();
-
-        // Redirection après suppression
         header("Location: /partenaires_crud.php?deleted=1");
         exit;
-
     } else {
         throw new Exception("Action inconnue ou ID invalide.");
     }
 
-    // Gestion upload image (create ou update)
+    // Gestion des images uploadées
     if (in_array($action, ['create', 'update']) && isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
         $tmpName = $_FILES['logo']['tmp_name'];
         $originalName = basename($_FILES['logo']['name']);
@@ -81,36 +73,21 @@ try {
         $baseName = pathinfo($nomFichier, PATHINFO_FILENAME);
         $sizes = [320, 768, 1200];
 
-        // Créer dossiers si non existants
+        // Créer les dossiers si besoin
         foreach ($sizes as $size) {
             $dir = __DIR__ . "/../public/img/partenaire/x$size";
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
+            if (!is_dir($dir)) mkdir($dir, 0755, true);
         }
 
-        // Charger image source
+        // Créer la ressource image selon l'extension
         switch ($ext) {
-            case 'jpg':
-            case 'jpeg':
-                $imgSrc = @imagecreatefromjpeg($tmpName);
-                break;
-            case 'png':
-                $imgSrc = @imagecreatefrompng($tmpName);
-                break;
-            case 'gif':
-                $imgSrc = @imagecreatefromgif($tmpName);
-                break;
-            case 'webp':
-                $imgSrc = @imagecreatefromwebp($tmpName);
-                break;
-            default:
-                throw new Exception("Extension non supportée.");
+            case 'jpg': case 'jpeg': $imgSrc = @imagecreatefromjpeg($tmpName); break;
+            case 'png': $imgSrc = @imagecreatefrompng($tmpName); break;
+            case 'gif': $imgSrc = @imagecreatefromgif($tmpName); break;
+            case 'webp': $imgSrc = @imagecreatefromwebp($tmpName); break;
+            default: throw new Exception("Extension non supportée.");
         }
-
-        if (!$imgSrc) {
-            throw new Exception("Impossible de traiter l'image.");
-        }
+        if (!$imgSrc) throw new Exception("Impossible de traiter l'image.");
 
         $widthOrig = imagesx($imgSrc);
         $heightOrig = imagesy($imgSrc);
@@ -122,39 +99,34 @@ try {
             $newHeight = intval($newWidth / $ratio);
 
             $tmpImg = imagecreatetruecolor($newWidth, $newHeight);
-
-            // Gestion transparence (PNG/GIF)
             imagealphablending($tmpImg, false);
             imagesavealpha($tmpImg, true);
-
             imagecopyresampled($tmpImg, $imgSrc, 0, 0, 0, 0, $newWidth, $newHeight, $widthOrig, $heightOrig);
 
             $newFileName = $baseName . "_$size.webp";
             $pathRelative = "/img/partenaire/x$size/$newFileName";
-            $pathAbsolute = __DIR__ . "/../public/img/partenaire/x$size/$newFileName";
+            $pathAbsolute = __DIR__ . "/../public$pathRelative";
 
             imagewebp($tmpImg, $pathAbsolute, 80);
             imagedestroy($tmpImg);
 
-            // Enregistrer dans partenaire_versions
+            // Insérer version en base
             $stmt = $pdo->prepare("INSERT INTO partenaire_versions (partenaire_id, size, path) VALUES (?, ?, ?)");
             $stmt->execute([$id, $size, $pathRelative]);
 
-            if ($size === 1200) {
-                $chemin1200 = $pathRelative;
-            }
+            if ($size === 1200) $chemin1200 = $pathRelative;
         }
 
         imagedestroy($imgSrc);
 
-        // Mettre à jour chemin 1200 dans partenaires
-        if ($chemin1200 !== null) {
+        // Mettre à jour le chemin principal
+        if ($chemin1200) {
             $stmt = $pdo->prepare("UPDATE partenaires SET chemin = ? WHERE id = ?");
             $stmt->execute([$chemin1200, $id]);
         }
 
     } elseif (in_array($action, ['create', 'update'])) {
-        // Pas d'upload mais gérer les versions envoyées (ex: existantes)
+        // Versions existantes envoyées via $versions
         foreach ($versions as $size => $fileName) {
             $sizeInt = (int)$size;
             if (!in_array($sizeInt, [320, 768, 1200])) continue;
@@ -166,7 +138,6 @@ try {
             $stmt->execute([$id, $sizeInt, $pathRelative]);
 
             if ($sizeInt === 1200) {
-                // Mettre à jour chemin 1200 dans partenaires
                 $stmt = $pdo->prepare("UPDATE partenaires SET chemin = ? WHERE id = ?");
                 $stmt->execute([$pathRelative, $id]);
             }
@@ -174,8 +145,6 @@ try {
     }
 
     $pdo->commit();
-
-    // Redirection succès
     header("Location: /partenaires_crud.php?success=1");
     exit;
 

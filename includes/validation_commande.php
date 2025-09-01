@@ -20,7 +20,7 @@ if (!$pdo) {
 // Fonction de redirection centralisée
 function redirect($url) {
     header("Location: $url");
-    exit();
+    exit;
 }
 
 // Traitement uniquement sur POST
@@ -32,12 +32,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 // ✅ Vérification CSRF
 if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
-    redirect("/public/panier.php?error=1");
+    redirect("panier.php?error=1");
 }
 
 // ✅ Honeypot anti-bot
 if (!empty($_POST['website'])) {
-    redirect("/public/panier.php?success=1");
+    redirect("panier.php?success=1");
 }
 
 // ✅ Adresse IP
@@ -55,7 +55,7 @@ $stmt->execute(['ip' => $ip]);
 $attempts = $stmt->fetchColumn();
 
 if ($attempts >= 3) {
-    redirect("/public/panier.php?error=1"); // Trop de tentatives
+    redirect("panier.php?error=1"); // Trop de tentatives
 }
 
 // ✅ Récupération et nettoyage des données
@@ -70,12 +70,12 @@ if (
     empty($nom) || empty($prenom) || empty($email) || empty($telephone) ||
     !filter_var($email, FILTER_VALIDATE_EMAIL)
 ) {
-    redirect("/public/panier.php?error=1");
+    redirect("panier.php?error=1");
 }
 
 // ✅ Protection contre l'injection d'en-tête email
 if (preg_match("/[\r\n]/", $email)) {
-    redirect("/public/panier.php?error=1");
+    redirect("panier.php?error=1");
 }
 
 // ✅ Enregistrement de la tentative
@@ -133,7 +133,7 @@ $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 // ✅ Envoi de l’e-mail
 if (mail($destinataire, $sujet, $contenu, $headers)) {
     unset($_SESSION['panier']); // Vider le panier après envoi
-    redirect("/public/panier.php?success=1");
+    redirect("panier.php?success=1");
 } else {
-    redirect("/public/panier.php?error=1");
+    redirect("panier.php?error=1");
 }

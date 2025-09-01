@@ -13,10 +13,16 @@ if (!isUserLoggedIn()) {
     exit;
 }
 
-// Récupère uniquement les images originales dans /img/image_nav/ (pas les sous-dossiers)
+// Récupération des informations utilisateur et partenaires
+$userInfo = getUserInfo($pdo);
+$contact = getContactInfo($pdo);
+$partenaires = getAllPartners($pdo);
+$partenaires = enrichPartnersWithVersions($pdo, $partenaires);
+
+// Fonction pour récupérer les images originales dans /img/image_nav/ (exclut les sous-dossiers)
 function getAvailableImages(): array
 {
-    $baseDir = '/home/fvhvyig/www/img/image_nav/';
+    $baseDir = __DIR__ . '/img/image_nav/';
     $excludeDirs = ['x320', 'x768', 'x1200'];
     $images = [];
 
@@ -25,12 +31,10 @@ function getAvailableImages(): array
         foreach ($files as $file) {
             $fullPath = $baseDir . $file;
 
-            // Ignorer les sous-dossiers x320, x768, x1200
             if (is_dir($fullPath) && in_array($file, $excludeDirs)) {
                 continue;
             }
 
-            // Ajouter uniquement les fichiers .webp
             if (is_file($fullPath) && preg_match('/\.webp$/i', $file)) {
                 $images[] = '/img/image_nav/' . $file;
             }
@@ -40,28 +44,24 @@ function getAvailableImages(): array
     return $images;
 }
 
-// Récupération des données
-$userInfo = getUserInfo($pdo);
-$contact = getContactInfo($pdo);
-$partenaires = getAllPartners($pdo);
-$partenaires = enrichPartnersWithVersions($pdo, $partenaires);
-
-$id = $_GET['id'] ?? 1;
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
 $availableImages = getAvailableImages();
 
 // Récupération des données de l'image_nav
-$imageNavSql = "SELECT id, image_path FROM image_nav WHERE id = :id;";
+$imageNavSql = "SELECT id, image_path FROM image_nav WHERE id = :id";
 $stmt = $pdo->prepare($imageNavSql);
 $stmt->execute(['id' => $id]);
 $imageNav = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Récupération des versions de l'image
-$versionsSql = "SELECT * FROM image_nav_versions WHERE image_nav_id = :id";
+// Récupération des versions existantes (sans SELECT *)
+$versionsSql = "SELECT id, image_nav_id, format, size, path 
+                FROM image_nav_versions 
+                WHERE image_nav_id = :id";
 $stmt = $pdo->prepare($versionsSql);
 $stmt->execute(['id' => $id]);
 $versions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Génère dynamiquement les versions si elles n'existent pas en base
+// Si aucune version en base, générer dynamiquement les formats
 if (empty($versions) && !empty($imageNav['image_path'])) {
     $formats = [
         'x320' => 320,
@@ -69,10 +69,10 @@ if (empty($versions) && !empty($imageNav['image_path'])) {
         'x1200' => 1200
     ];
     $imageFilename = basename($imageNav['image_path']);
-
     foreach ($formats as $format => $size) {
         $versions[] = [
             'id' => null,
+            'image_nav_id' => $id,
             'format' => $format,
             'size' => $size,
             'path' => "/img/image_nav/$format/$imageFilename"
@@ -108,23 +108,17 @@ if (empty($versions) && !empty($imageNav['image_path'])) {
                         $imgName = basename($img);
                         $currentImage = basename($imageNav['image_path'] ?? '');
                         $selected = ($currentImage === $imgName) ? 'selected' : '';
-                        ?>
+                    ?>
                         <option value="<?= htmlspecialchars($imgName) ?>" <?= $selected ?>>
                             <?= htmlspecialchars($imgName) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
 
-                <?php
-                $previewImage = '';
-                if (!empty($imageNav['image_path'])) {
-                    $previewImage = '/img/image_nav/' . basename($imageNav['image_path']);
-                }
-                ?>
-                <?php if ($previewImage): ?>
+                <?php if (!empty($imageNav['image_path'])): ?>
                     <br>
-                    <img id="previewImage" src="<?= htmlspecialchars($previewImage) ?>"
-                        style="max-width:200px; margin-top:10px; <?= $previewImage ? '' : 'display:none;' ?>">
+                    <img id="previewImage" src="<?= '/img/image_nav/' . htmlspecialchars(basename($imageNav['image_path'])) ?>" 
+                        style="max-width:200px; margin-top:10px;">
                 <?php endif; ?>
             </div>
 
@@ -133,12 +127,9 @@ if (empty($versions) && !empty($imageNav['image_path'])) {
                 <?php if ($version['id']): ?>
                     <input type="hidden" name="versions[<?= $i ?>][id]" value="<?= $version['id'] ?>">
                 <?php endif; ?>
-                Format: <input type="text" name="versions[<?= $i ?>][format]"
-                    value="<?= htmlspecialchars($version['format']) ?>" readonly>
-                Taille: <input type="number" name="versions[<?= $i ?>][size]"
-                    value="<?= htmlspecialchars($version['size']) ?>" readonly>
-                Chemin: <input type="text" name="versions[<?= $i ?>][path]"
-                    value="<?= htmlspecialchars($version['path']) ?>" readonly class="version-path"><br><br>
+                Format: <input type="text" name="versions[<?= $i ?>][format]" value="<?= htmlspecialchars($version['format']) ?>" readonly>
+                Taille: <input type="number" name="versions[<?= $i ?>][size]" value="<?= htmlspecialchars($version['size']) ?>" readonly>
+                Chemin: <input type="text" name="versions[<?= $i ?>][path]" value="<?= htmlspecialchars($version['path']) ?>" readonly class="version-path"><br><br>
             <?php endforeach; ?>
 
             <div style="margin-top:10px;">

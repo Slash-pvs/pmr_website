@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'], $_POST['cat
 <head>
     <meta charset="UTF-8">
     <title>Résultat de l'upload</title>
-    <link rel="stylesheet" href="/public/css/upload_message.css" />
+    <link rel="stylesheet" href="/css/upload_message.css" />
     <script>
         setTimeout(() => window.location.href = 'dashboard.php', 5000);
     </script>

@@ -39,10 +39,26 @@ function updateArticle(PDO $pdo, int $id, string $title, string $content, string
     ]);
 }
 
-// Supprime un article
-function deleteArticle(PDO $pdo, int $id): bool {
-    $stmt = $pdo->prepare("DELETE FROM articles WHERE id = :id");
-    return $stmt->execute([':id' => $id]);
+// Supprime un article par ID avec vérification
+function deleteArticleByIdWithCheck(PDO $pdo, int $id, ?string &$errorMessage = null): bool {
+    // Vérifie que l'article existe
+    $stmtCheck = $pdo->prepare("SELECT title FROM articles WHERE id = :id");
+    $stmtCheck->execute([':id' => $id]);
+    $article = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if (!$article) {
+        $errorMessage = "Article introuvable.";
+        return false;
+    }
+
+    // Supprime l'article
+    $stmtDelete = $pdo->prepare("DELETE FROM articles WHERE id = :id");
+    if ($stmtDelete->execute([':id' => $id])) {
+        return true;
+    } else {
+        $errorMessage = "Erreur lors de la suppression de l'article.";
+        return false;
+    }
 }
 
 // Récupère la liste des images disponibles dans /img pour sélectionner

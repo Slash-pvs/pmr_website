@@ -1,8 +1,11 @@
 <?php
 session_start();
-require_once __DIR__ . '/functions.php';
-$pdo = require __DIR__ . '/db.php';
-session_destroy();  // Détruit toutes les sessions
-header('Location: page_login.php');  // Redirige vers la page de connexion
+
+// Détruit toutes les données de session
+$_SESSION = [];
+session_unset();
+session_destroy();
+
+// Redirige vers la page de login
+header('Location: page_login.php');
 exit;
-?>

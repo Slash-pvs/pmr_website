@@ -5,42 +5,49 @@ error_reporting(E_ALL);
 
 session_start();
 
-// Vérification de la session, si elle n'est pas démarrée, on la démarre
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Inclure les fonctions et la base de données
 require_once __DIR__ . '/functions.php';
 $pdo = require __DIR__ . '/db.php';
+
 $errorMessage = '';
 
+// Générer ou récupérer le token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrfToken = $_SESSION['csrf_token'];
+
+// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     // Vérification CSRF
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $csrfToken) {
         $errorMessage = 'Erreur CSRF.';
     }
 
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+    $email = trim($_POST['email'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
     if (empty($email) || empty($password)) {
         $errorMessage = 'Veuillez remplir tous les champs.';
-    } else {
-        // Requête avec l'email
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email');
+    }
+
+    if (empty($errorMessage)) {
+        // Requête sécurisée
+        $stmt = $pdo->prepare('SELECT id, email, password FROM users WHERE email = :email LIMIT 1');
         $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
-            // die("Redirection vers dashboard.php"); // <-- Supprimer ou commenter cette ligne
             header('Location: dashboard.php');
             exit;
+        } else {
+            $errorMessage = 'Email ou mot de passe incorrect.';
         }
     }
 }
+
 // Récupération des données pour la navigation et le footer
 $contact = getContactInfo($pdo);
 $partenaires = getAllPartners($pdo);
@@ -49,81 +56,64 @@ $partenaires = enrichPartnersWithVersions($pdo, $partenaires);
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <title>Connexion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/login.css"> <!-- Style spécifique pour le formulaire de login -->
+    <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/footer.css">
-
 </head>
-
 <body>
 
-    <!-- Navigation -->
-    <?php safeRequire('nav.php'); ?>
+<?php safeRequire('nav.php'); ?>
 
-    <div id="login-wrapper">
-        <div class="login-box">
-            <h1>Connexion</h1>
+<div id="login-wrapper">
+    <div class="login-box">
+        <h1>Connexion</h1>
 
-            <!-- Affichage du message d'erreur -->
-            <?php if (!empty($errorMessage)): ?>
-                <div class="login-error"><?= htmlspecialchars($errorMessage) ?></div>
-            <?php endif; ?>
+        <?php if (!empty($errorMessage)): ?>
+            <div class="login-error"><?= htmlspecialchars($errorMessage) ?></div>
+        <?php endif; ?>
 
-            <!-- Formulaire de connexion -->
-            <form method="POST" class="login-form" novalidate>
-                <!-- Champ e-mail -->
-                <div class="login-group">
-                    <label for="email">Adresse e-mail</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
+        <form method="POST" class="login-form" novalidate>
+            <div class="login-group">
+                <label for="email">Adresse e-mail</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-                <!-- Champ mot de passe -->
-                <div class="login-group">
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
+            <div class="login-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-                <!-- Token CSRF -->
-                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generateCsrfToken()); ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
-                <!-- Bouton de soumission -->
-                <button type="submit" class="login-btn">Se connecter</button>
-            </form>
-        </div>
+            <button type="submit" class="login-btn">Se connecter</button>
+        </form>
     </div>
+</div>
 
-    <!-- Validation côté client -->
-    <script>
-        document.querySelector('form').addEventListener('submit', function (event) {
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
+<script>
+document.querySelector('form').addEventListener('submit', function(event) {
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value.trim();
+    if(email === '' || password === '') {
+        alert('Veuillez remplir tous les champs.');
+        event.preventDefault();
+    }
+});
+</script>
 
-            if (email === '' || password === '') {
-                alert('Veuillez remplir tous les champs');
-                event.preventDefault(); // Empêche la soumission du formulaire
-            }
-        });
-    </script>
+<?php includeFooter($contact, $partenaires); ?>
 
-    <!-- Footer -->
-    <?php
-    includeFooter($contact, $partenaires);
-    ?>
-
-    <!-- Autres scripts -->
-    <script src="/js/scroll.js" defer></script>
-    <script src="/js/nav_img.js" defer></script>
-    <script src="/js/modal_image_background_nav.js" defer></script>
-    <script src="/js/menuburger.js" defer></script>
-    <script src="/js/modal_gallery.js" defer></script>
-    <script src="/js/slide-partenaire.js" defer></script>
-    <script src="/js/regex_login_mdp_mail.js" defer></script>
+<script src="/js/scroll.js" defer></script>
+<script src="/js/nav_img.js" defer></script>
+<script src="/js/modal_image_background_nav.js" defer></script>
+<script src="/js/menuburger.js" defer></script>
+<script src="/js/modal_gallery.js" defer></script>
+<script src="/js/slide-partenaire.js" defer></script>
+<script src="/js/regex_login_mdp_mail.js" defer></script>
 </body>
-
 </html>

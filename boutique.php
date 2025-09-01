@@ -65,6 +65,7 @@ $partenaires = enrichPartnersWithVersions($pdo, $partenaires);
                   <p class="out-of-stock">Rupture de stock</p>
                <?php else: ?>
                   <form class="form-ajout-panier" data-id="<?= $produit['id'] ?>" method="post">
+                     <?= csrfInputField(); ?> <!-- Champ CSRF ajouté -->
                      <input type="hidden" name="id" value="<?= $produit['id'] ?>">
                      <input type="hidden" name="nom" value="<?= htmlspecialchars($produit['nom']) ?>">
                      <input type="hidden" name="prix" value="<?= $produit['prix'] ?>">
@@ -74,6 +75,7 @@ $partenaires = enrichPartnersWithVersions($pdo, $partenaires);
 
                      <button type="submit">Ajouter au panier</button>
                   </form>
+
                <?php endif; ?>
             </div>
          <?php endforeach; ?>
@@ -86,7 +88,7 @@ $partenaires = enrichPartnersWithVersions($pdo, $partenaires);
    ?>
 
    <!-- Scripts -->
-    <script src="/js/panier.js" type="module" defer></script>
+   <script src="/js/panier.js" type="module" defer></script>
    <script src="/js/scroll.js" defer></script>
    <script src="/js/nav_img.js" defer></script>
    <script src="/js/modal_image_background_nav.js" defer></script>

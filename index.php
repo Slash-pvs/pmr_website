@@ -10,18 +10,22 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Récupérer les images selon la catégorie
-$tag = isset($_GET['tag']) ? trim($_GET['tag']) : '';
-$images = ($tag === '') ? getAllImages($pdo) : getImagesByCategory($pdo, $tag);
-
 // Récupération des données pour le footer et la navigation
 $contact = getContactInfo($pdo);
 $partenaires = getAllPartners($pdo);
 $partenaires = enrichPartnersWithVersions($pdo, $partenaires);
 $descriptionClub = getTeamDescription($pdo, 'Club');
+// Récupérer les images selon la catégorie
+$tag = isset($_GET['tag']) ? trim($_GET['tag']) : '';
+// Validation stricte du tag : lettres, chiffres, tirets et underscores uniquement
+if ($tag !== '' && !preg_match('/^[a-zA-Z0-9_-]+$/', $tag)) {
+    $tag = ''; // valeur par défaut si invalide
+}
+$images = ($tag === '') ? getAllImages($pdo) : getImagesByCategory($pdo, $tag);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +34,7 @@ $descriptionClub = getTeamDescription($pdo, 'Club');
     <link rel="stylesheet" href="/css/footer.css">
     <title>Accueil</title>
 </head>
+
 <body>
     <!-- Nav -->
     <?php safeRequire('nav.php', ['pdo' => $pdo]); ?>
@@ -56,7 +61,7 @@ $descriptionClub = getTeamDescription($pdo, 'Club');
                             <source srcset="<?= htmlspecialchars($img['versions']['1200']) ?>" media="(min-width: 992px)">
                         <?php endif; ?>
                         <img class="gallerie-img" src="<?= htmlspecialchars($img['original']) ?>"
-                             alt="Image catégorie <?= htmlspecialchars($img['category']) ?>" loading="lazy">
+                            alt="Image catégorie <?= htmlspecialchars($img['category']) ?>" loading="lazy">
                     </picture>
                 </div>
             <?php endforeach; ?>
@@ -78,4 +83,5 @@ $descriptionClub = getTeamDescription($pdo, 'Club');
     <script src="/js/slide-partenaire.js" defer></script>
     <script src="/js/widget-ffr.js" defer></script>
 </body>
+
 </html>

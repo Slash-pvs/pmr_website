@@ -40,26 +40,38 @@ $partenaires = enrichPartnersWithVersions($pdo, $partenaires);
     <div id="mainContent" class="main-content">
         <?php
         $posts = getAllPosts($pdo);
+        if ($posts): ?>
+            <div class="feed">
+                <?php foreach ($posts as $row): ?>
+                    <article class="post">
+                        <h2><?= htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8') ?></h2>
+                        <p><?= nl2br(htmlspecialchars($row['content'], ENT_QUOTES, 'UTF-8')) ?></p>
 
-        if ($posts) {
-            echo "<div class='feed'>";
-            foreach ($posts as $row) {
-                echo "<div class='post'>";
-                echo "<h2>" . htmlspecialchars($row['title']) . "</h2>";
-                echo "<p>" . nl2br(htmlspecialchars($row['content'])) . "</p>";
+                        <?php if (!empty($row['image_path'])):
+                            $imageBase = pathinfo($row['image_path'], PATHINFO_FILENAME);
+                            $imageExt = pathinfo($row['image_path'], PATHINFO_EXTENSION);
+                            $imageUrl = htmlspecialchars($row['image_path'], ENT_QUOTES, 'UTF-8');
+                            ?>
+                            <figure>
+                                <img src="<?= $imageUrl ?>" srcset="/img/gallery/<?= $imageBase ?>_320.<?= $imageExt ?> 320w,
+                                        /img/gallery/<?= $imageBase ?>_768.<?= $imageExt ?> 768w"
+                                    sizes="(max-width: 768px) 100vw, 768px"
+                                    alt="<?= htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8') ?>"
+                                    style="max-width:100%; height:auto;" loading="lazy">
+                                <figcaption>Catégorie : <?= htmlspecialchars($row['category'], ENT_QUOTES, 'UTF-8') ?> | Publié le :
+                                    <?= htmlspecialchars($row['created_at'], ENT_QUOTES, 'UTF-8') ?></figcaption>
+                            </figure>
+                        <?php else: ?>
+                            <p><small>Catégorie : <?= htmlspecialchars($row['category'], ENT_QUOTES, 'UTF-8') ?> | Publié le :
+                                    <?= htmlspecialchars($row['created_at'], ENT_QUOTES, 'UTF-8') ?></small></p>
+                        <?php endif; ?>
 
-                if (!empty($row['image_path'])) {
-                    echo "<img src='" . htmlspecialchars($row['image_path']) . "' alt='Image du post' style='max-width: 100%; height: auto;'>";
-                }
-
-                echo "<p><small>Catégorie : " . htmlspecialchars($row['category']) . " | Publié le : " . $row['created_at'] . "</small></p>";
-                echo "</div>";
-            }
-            echo "</div>";
-        } else {
-            echo "<p>Aucun article trouvé.</p>";
-        }
-        ?>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p>Aucun article trouvé.</p>
+        <?php endif; ?>
     </div>
 
     <!-- Footer -->

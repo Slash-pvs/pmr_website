@@ -2,7 +2,13 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+// Fonction générique pour exécuter une requête préparée
+function db_query($sql, $params = [], $fetchAll = true) {
+    global $pdo;
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return $fetchAll ? $stmt->fetchAll() : $stmt;
+}
 // Vérifie si l'utilisateur est connecté
 function isUserLoggedIn()
 {
@@ -321,15 +327,45 @@ function enrichPartnersWithVersions($pdo, $partners)
     return $result;
 }
 
+/**
+ * Génère un token CSRF et le stocke en session
+ * @return string Le token CSRF
+ */
 function generateCsrfToken()
 {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    
+
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
-    
+
     return $_SESSION['csrf_token'];
+}
+
+/**
+ * Vérifie si le token CSRF envoyé par le formulaire est valide
+ * @param string|null $token Token reçu
+ * @return bool true si valide, false sinon
+ */
+function verifyCsrfToken($token)
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (empty($token) || empty($_SESSION['csrf_token'])) {
+        return false;
+    }
+
+    return hash_equals($_SESSION['csrf_token'], $token);
+}
+
+// Génère le champ input à insérer dans un formulaire HTML
+
+function csrfInputField()
+{
+    $token = generateCsrfToken();
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
 }
