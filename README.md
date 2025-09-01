@@ -24,7 +24,7 @@ Site web CMS du Pays Médoc Rugby, permettant la gestion dynamique d’articles,
 - Téléversement d’images, navigation dynamique, gestion du panier
 
 ## Technologies
-- **Langage backend** : PHP  
+- **Langage backend** : PHP  8.1
 - **Frontend** : CSS, JavaScript  
 - **Structure** : fichiers `*.php` pour les modules (ex. `article_crud.php`, `boutique.php`)  
 - **Assets** : dossiers `css/`, `img/`, `js/`
